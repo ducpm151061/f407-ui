@@ -139,6 +139,7 @@ ui/leg.c \
 LVGL_DIR = .
 LVGL_DIR_NAME = lvgl
 include $(LVGL_DIR)/$(LVGL_DIR_NAME)/lvgl.mk
+include lv_demos/lv_demo.mk
 LVGL_SOURCES := $(CSRCS)
 SHARED_SOURCES += $(LVGL_SOURCES)
 
@@ -214,6 +215,7 @@ C_INCLUDES =  \
 -I. \
 -Ilvgl \
 -Ilv_drivers \
+-Ilv_demos \
 -Idevice \
 -Iui
 

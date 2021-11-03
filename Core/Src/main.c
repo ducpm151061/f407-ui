@@ -54,10 +54,11 @@ int main(void)
     // WS_AT45DBXX_Test();
     lv_port_disp_init();
     lv_port_indev_init(keyboard_group);
-    lv_test();
+    // lv_test();
+    // lv_demo_music();
     // lv_demo_stress();
     // lv_demo_widgets();
-    // lv_demo_benchmark();
+    lv_demo_benchmark();
     // lv_demo_keypad_encoder();
 
     while (1)
