@@ -33,6 +33,8 @@
 #include "w25q64.h"
 #include "wkup.h"
 
+#include "aht10.h"
+#include "as5600.h"
 #include "custom_malloc.h"
 #include "exfuns.h"
 #include "ff.h"

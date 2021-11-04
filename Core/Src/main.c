@@ -41,6 +41,8 @@ int main(void)
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC, ENABLE);
     AT24C02_Init();
     W25Q64_Init();
+    // AS_Init();
+    // AHT_Init();
     RNG_Init();
     Check_SDCard();
     // my_mem_init(SRAMIN);
@@ -52,15 +54,15 @@ int main(void)
     // W25Q64_Test();
     // AT24C02_Test();
     // WS_AT45DBXX_Test();
+
     lv_port_disp_init();
     lv_port_indev_init(keyboard_group);
     // lv_test();
     // lv_demo_music();
-    // lv_demo_stress();
+    lv_demo_stress();
     // lv_demo_widgets();
-    lv_demo_benchmark();
+    // lv_demo_benchmark();
     // lv_demo_keypad_encoder();
-
     while (1)
     {
         lv_timer_handler();
