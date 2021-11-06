@@ -3,7 +3,7 @@
 #include <stm32f4xx.h>
 
 extern u32 FONTINFOADDR;
-__PACKED typedef struct
+typedef struct __attribute__((packed))
 {
     u8 fontok;
     u32 ugbkaddr;

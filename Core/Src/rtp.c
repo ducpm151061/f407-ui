@@ -11,7 +11,6 @@
 
 extern u8 touch_flag;
 
-//���败������ȡx,y���������
 u8 CMD_RDX = 0XD0;
 u8 CMD_RDY = 0X90;
 
@@ -34,7 +33,7 @@ void RTP_Write_Byte(u8 num)
         num <<= 1;
         TCLK = 0;
         delay_us(1);
-        TCLK = 1; //��������Ч
+        TCLK = 1;
     }
 }
 
@@ -49,32 +48,32 @@ u16 RTP_Read_AD(u8 CMD)
 {
     u8 count = 0;
     u16 Num = 0;
-    TCLK = 0;            //������ʱ��
-    TDIN = 0;            //����������
-    TCS = 0;             //ѡ�д�����IC
-    RTP_Write_Byte(CMD); //����������
-    delay_us(6);         // ADS7846��ת��ʱ���Ϊ6us
+    TCLK = 0;
+    TDIN = 0;
+    TCS = 0;
+    RTP_Write_Byte(CMD);
+    delay_us(6);
     TCLK = 0;
     delay_us(1);
-    TCLK = 1; //��1��ʱ�ӣ����BUSY
+    TCLK = 1;
     delay_us(1);
     TCLK = 0;
-    for (count = 0; count < 16; count++) //����16λ����,ֻ�и�12λ��Ч
+    for (count = 0; count < 16; count++)
     {
         Num <<= 1;
-        TCLK = 0; //�½�����Ч
+        TCLK = 0;
         delay_us(1);
         TCLK = 1;
         if (DOUT)
             Num++;
     }
-    Num >>= 4; //ֻ�и�12λ��Ч.
-    TCS = 1;   //�ͷ�Ƭѡ
+    Num >>= 4;
+    TCS = 1;
     return (Num);
 }
 
-#define READ_TIMES 5 //��ȡ����
-#define LOST_VAL 1   //����ֵ
+#define READ_TIMES 5
+#define LOST_VAL 1
 /*****************************************************************************
  * @name       :u16 RTP_Read_XOY(u8 xy)
  * @date       :2018-08-09
@@ -94,11 +93,11 @@ u16 RTP_Read_XOY(u8 xy)
     u16 temp;
     for (i = 0; i < READ_TIMES; i++)
         buf[i] = RTP_Read_AD(xy);
-    for (i = 0; i < READ_TIMES - 1; i++) //����
+    for (i = 0; i < READ_TIMES - 1; i++)
     {
         for (j = i + 1; j < READ_TIMES; j++)
         {
-            if (buf[i] > buf[j]) //��������
+            if (buf[i] > buf[j])
             {
                 temp = buf[i];
                 buf[i] = buf[j];
@@ -127,13 +126,13 @@ u8 RTP_Read_XY(u16 *x, u16 *y)
     u16 xtemp, ytemp;
     xtemp = RTP_Read_XOY(CMD_RDX);
     ytemp = RTP_Read_XOY(CMD_RDY);
-    // if(xtemp<100||ytemp<100)return 0;//����ʧ��
+    // if(xtemp<100||ytemp<100)return 0;
     *x = xtemp;
     *y = ytemp;
-    return 1; //�����ɹ�
+    return 1;
 }
 
-#define ERR_RANGE 50 //��Χ
+#define ERR_RANGE 50
 /*****************************************************************************
  * @name       :u8 TP_Read_XY2(u16 *x,u16 *y)
  * @date       :2018-08-09
@@ -180,13 +179,13 @@ u8 RTP_Read_XY2(u16 *x, u16 *y)
 void RTP_Drow_Touch_Point(u16 x, u16 y, u16 color)
 {
     POINT_COLOR = color;
-    LCD_DrawLine(x - 12, y, x + 13, y); //����
-    LCD_DrawLine(x, y - 12, x, y + 13); //����
+    LCD_DrawLine(x - 12, y, x + 13, y);
+    LCD_DrawLine(x, y - 12, x, y + 13);
     LCD_DrawPoint(x + 1, y + 1);
     LCD_DrawPoint(x - 1, y + 1);
     LCD_DrawPoint(x + 1, y - 1);
     LCD_DrawPoint(x - 1, y - 1);
-    gui_circle(x, y, POINT_COLOR, 6, 0); //������Ȧ
+    gui_circle(x, y, POINT_COLOR, 6, 0);
 }
 
 /*****************************************************************************
@@ -201,7 +200,7 @@ void RTP_Drow_Touch_Point(u16 x, u16 y, u16 color)
 void RTP_Draw_Big_Point(u16 x, u16 y, u16 color)
 {
     POINT_COLOR = color;
-    LCD_DrawPoint(x, y); //���ĵ�
+    LCD_DrawPoint(x, y);
     LCD_DrawPoint(x + 1, y);
     LCD_DrawPoint(x, y + 1);
     LCD_DrawPoint(x + 1, y + 1);
@@ -227,20 +226,20 @@ u8 RTP_Scan(u8 tp)
     }
     if (!irq)
 #else
-    if (PEN == 0) //�а�������
+    if (PEN == 0)
 #endif
     {
         if (tp)
-            RTP_Read_XY2(&tp_dev.x[0], &tp_dev.y[0]);      //��ȡ��������
-        else if (RTP_Read_XY2(&tp_dev.x[0], &tp_dev.y[0])) //��ȡ��Ļ����
+            RTP_Read_XY2(&tp_dev.x[0], &tp_dev.y[0]);
+        else if (RTP_Read_XY2(&tp_dev.x[0], &tp_dev.y[0]))
         {
-            tp_dev.x[0] = tp_dev.xfac * tp_dev.x[0] + tp_dev.xoff; //�����ת��Ϊ��Ļ����
+            tp_dev.x[0] = tp_dev.xfac * tp_dev.x[0] + tp_dev.xoff;
             tp_dev.y[0] = tp_dev.yfac * tp_dev.y[0] + tp_dev.yoff;
         }
-        if ((tp_dev.sta & TP_PRES_DOWN) == 0) //֮ǰû�б�����
+        if ((tp_dev.sta & TP_PRES_DOWN) == 0)
         {
-            tp_dev.sta = TP_PRES_DOWN | TP_CATH_PRES; //��������
-            tp_dev.x[4] = tp_dev.x[0];                //��¼��һ�ΰ���ʱ������
+            tp_dev.sta = TP_PRES_DOWN | TP_CATH_PRES;
+            tp_dev.x[4] = tp_dev.x[0];
             tp_dev.y[4] = tp_dev.y[0];
         }
     }
@@ -249,11 +248,11 @@ u8 RTP_Scan(u8 tp)
 #if SCAN_TYPE
         touch_flag = 0;
 #endif
-        if (tp_dev.sta & TP_PRES_DOWN) //֮ǰ�Ǳ����µ�
+        if (tp_dev.sta & TP_PRES_DOWN)
         {
-            tp_dev.sta &= ~(1 << 7); //��ǰ����ɿ�
+            tp_dev.sta &= ~(1 << 7);
         }
-        else //֮ǰ��û�б�����
+        else
         {
             tp_dev.x[4] = 0;
             tp_dev.y[4] = 0;
@@ -261,11 +260,9 @@ u8 RTP_Scan(u8 tp)
             tp_dev.y[0] = 0xffff;
         }
     }
-    return tp_dev.sta & TP_PRES_DOWN; //���ص�ǰ�Ĵ���״̬
+    return tp_dev.sta & TP_PRES_DOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////
-//������EEPROM����ĵ�ַ�����ַ,ռ��13���ֽ�(RANGE:SAVE_ADDR_BASE~SAVE_ADDR_BASE+12)
 #define SAVE_ADDR_BASE 40
 /*****************************************************************************
  * @name       :void TP_Save_Adjdata(void)
@@ -277,18 +274,14 @@ u8 RTP_Scan(u8 tp)
 void RTP_Save_Adjdata(void)
 {
     s32 temp;
-    //����У�����!
-    temp = tp_dev.xfac * 100000000; //����xУ������
+    temp = tp_dev.xfac * 100000000;
     AT24C02_WriteLenByte(SAVE_ADDR_BASE, temp, 4);
-    temp = tp_dev.yfac * 100000000; //����yУ������
+    temp = tp_dev.yfac * 100000000;
     AT24C02_WriteLenByte(SAVE_ADDR_BASE + 4, temp, 4);
-    //����xƫ����
     AT24C02_WriteLenByte(SAVE_ADDR_BASE + 8, tp_dev.xoff, 2);
-    //����yƫ����
     AT24C02_WriteLenByte(SAVE_ADDR_BASE + 10, tp_dev.yoff, 2);
-    //���津������
     AT24C02_WriteOneByte(SAVE_ADDR_BASE + 12, tp_dev.touchtype);
-    temp = 0X0A; //���У׼����
+    temp = 0X0A;
     AT24C02_WriteOneByte(SAVE_ADDR_BASE + 13, temp);
 }
 
@@ -303,24 +296,22 @@ void RTP_Save_Adjdata(void)
 u8 RTP_Get_Adjdata(void)
 {
     s32 tempfac;
-    tempfac = AT24C02_ReadOneByte(SAVE_ADDR_BASE + 13); //��ȡ�����,���Ƿ�У׼����
-    if (tempfac == 0X0A)                                //�������Ѿ�У׼����
+    tempfac = AT24C02_ReadOneByte(SAVE_ADDR_BASE + 13);
+    if (tempfac == 0X0A)
     {
         tempfac = AT24C02_ReadLenByte(SAVE_ADDR_BASE, 4);
-        tp_dev.xfac = (float)tempfac / 100000000; //�õ�xУ׼����
+        tp_dev.xfac = (float)tempfac / 100000000;
         tempfac = AT24C02_ReadLenByte(SAVE_ADDR_BASE + 4, 4);
-        tp_dev.yfac = (float)tempfac / 100000000; //�õ�yУ׼����
-                                                  //�õ�xƫ����
+        tp_dev.yfac = (float)tempfac / 100000000;
         tp_dev.xoff = AT24C02_ReadLenByte(SAVE_ADDR_BASE + 8, 2);
-        //�õ�yƫ����
         tp_dev.yoff = AT24C02_ReadLenByte(SAVE_ADDR_BASE + 10, 2);
-        tp_dev.touchtype = AT24C02_ReadOneByte(SAVE_ADDR_BASE + 12); //��ȡ�������ͱ��
-        if (tp_dev.touchtype)                                        // X,Y��������Ļ�෴
+        tp_dev.touchtype = AT24C02_ReadOneByte(SAVE_ADDR_BASE + 12);
+        if (tp_dev.touchtype)
         {
             CMD_RDX = 0X90;
             CMD_RDY = 0XD0;
         }
-        else // X,Y��������Ļ��ͬ
+        else
         {
             CMD_RDX = 0XD0;
             CMD_RDY = 0X90;
@@ -357,15 +348,15 @@ void RTP_Adj_Info_Show(u16 x0, u16 y0, u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u
     LCD_ShowString(40, 200, 16, "x4:", 1);
     LCD_ShowString(40 + 80, 200, 16, "y4:", 1);
     LCD_ShowString(40, 220, 16, "fac is:", 1);
-    LCD_ShowNum(40 + 24, 140, x0, 4, 16, 0);      //��ʾ��ֵ
-    LCD_ShowNum(40 + 24 + 80, 140, y0, 4, 16, 0); //��ʾ��ֵ
-    LCD_ShowNum(40 + 24, 160, x1, 4, 16, 0);      //��ʾ��ֵ
-    LCD_ShowNum(40 + 24 + 80, 160, y1, 4, 16, 0); //��ʾ��ֵ
-    LCD_ShowNum(40 + 24, 180, x2, 4, 16, 0);      //��ʾ��ֵ
-    LCD_ShowNum(40 + 24 + 80, 180, y2, 4, 16, 0); //��ʾ��ֵ
-    LCD_ShowNum(40 + 24, 200, x3, 4, 16, 0);      //��ʾ��ֵ
-    LCD_ShowNum(40 + 24 + 80, 200, y3, 4, 16, 0); //��ʾ��ֵ
-    LCD_ShowNum(40 + 56, 220, fac, 3, 16, 0); //��ʾ��ֵ,����ֵ������95~105��Χ֮��.
+    LCD_ShowNum(40 + 24, 140, x0, 4, 16, 0);
+    LCD_ShowNum(40 + 24 + 80, 140, y0, 4, 16, 0);
+    LCD_ShowNum(40 + 24, 160, x1, 4, 16, 0);
+    LCD_ShowNum(40 + 24 + 80, 160, y1, 4, 16, 0);
+    LCD_ShowNum(40 + 24, 180, x2, 4, 16, 0);
+    LCD_ShowNum(40 + 24 + 80, 180, y2, 4, 16, 0);
+    LCD_ShowNum(40 + 24, 200, x3, 4, 16, 0);
+    LCD_ShowNum(40 + 24 + 80, 200, y3, 4, 16, 0);
+    LCD_ShowNum(40 + 56, 220, fac, 3, 16, 0);
 }
 
 /*****************************************************************************
@@ -377,7 +368,7 @@ void RTP_Adj_Info_Show(u16 x0, u16 y0, u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u
  ******************************************************************************/
 void RTP_Adjust(void)
 {
-    u16 pos_temp[4][2]; //���껺��ֵ
+    u16 pos_temp[4][2];
     u8 cnt = 0;
     u16 d1, d2;
     u32 tem1, tem2;
@@ -386,27 +377,26 @@ void RTP_Adjust(void)
     cnt = 0;
     POINT_COLOR = BLUE;
     BACK_COLOR = WHITE;
-    LCD_Clear(WHITE);  //����
-    POINT_COLOR = RED; //��ɫ
-    LCD_Clear(WHITE);  //����
+    LCD_Clear(WHITE);
+    POINT_COLOR = RED;
+    LCD_Clear(WHITE);
     POINT_COLOR = BLACK;
-    LCD_ShowString(10, 40, 16, "Please use the stylus click", 1); //��ʾ��ʾ��Ϣ
-    LCD_ShowString(10, 56, 16, "the cross on the screen.", 1);    //��ʾ��ʾ��Ϣ
-    LCD_ShowString(10, 72, 16, "The cross will always move", 1);  //��ʾ��ʾ��Ϣ
-    LCD_ShowString(10, 88, 16, "until the screen adjustment", 1); //��ʾ��ʾ��Ϣ
-    LCD_ShowString(10, 104, 16, "is completed.", 1);              //��ʾ��ʾ��Ϣ
+    LCD_ShowString(10, 40, 16, "Please use the stylus click", 1);
+    LCD_ShowString(10, 56, 16, "the cross on the screen.", 1);
+    LCD_ShowString(10, 72, 16, "The cross will always move", 1);
+    LCD_ShowString(10, 88, 16, "until the screen adjustment", 1);
+    LCD_ShowString(10, 104, 16, "is completed.", 1);
 
-    RTP_Drow_Touch_Point(20, 20, RED); //����1
-    tp_dev.sta = 0;                    //���������ź�
-    tp_dev.xfac =
-        0; // xfac��������Ƿ�У׼��,����У׼֮ǰ�������!�������
-    while (1) //�������10����û�а���,���Զ��˳�
+    RTP_Drow_Touch_Point(20, 20, RED);
+    tp_dev.sta = 0;
+    tp_dev.xfac = 0;
+    while (1)
     {
-        RTP_Scan(1);                             //ɨ����������
-        if ((tp_dev.sta & 0xc0) == TP_CATH_PRES) //����������һ��(��ʱ�����ɿ���.)
+        RTP_Scan(1);
+        if ((tp_dev.sta & 0xc0) == TP_CATH_PRES)
         {
             outtime = 0;
-            tp_dev.sta &= ~(1 << 6); //��ǰ����Ѿ�����������.
+            tp_dev.sta &= ~(1 << 6);
 
             pos_temp[cnt][0] = tp_dev.x[0];
             pos_temp[cnt][1] = tp_dev.y[0];
@@ -414,103 +404,100 @@ void RTP_Adjust(void)
             switch (cnt)
             {
             case 1:
-                RTP_Drow_Touch_Point(20, 20, WHITE);              //�����1
-                RTP_Drow_Touch_Point(lcddev.width - 20, 20, RED); //����2
+                RTP_Drow_Touch_Point(20, 20, WHITE);
+                RTP_Drow_Touch_Point(lcddev.width - 20, 20, RED);
                 break;
             case 2:
-                RTP_Drow_Touch_Point(lcddev.width - 20, 20, WHITE); //�����2
-                RTP_Drow_Touch_Point(20, lcddev.height - 20, RED);  //����3
+                RTP_Drow_Touch_Point(lcddev.width - 20, 20, WHITE);
+                RTP_Drow_Touch_Point(20, lcddev.height - 20, RED);
                 break;
             case 3:
                 RTP_Drow_Touch_Point(20, lcddev.height - 20, WHITE);              //�����3
                 RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, RED); //����4
                 break;
-            case 4:                                          //ȫ���ĸ����Ѿ��õ�
-                                                             //�Ա����
+            case 4:
+
                 tem1 = abs(pos_temp[0][0] - pos_temp[1][0]); // x1-x2
                 tem2 = abs(pos_temp[0][1] - pos_temp[1][1]); // y1-y2
                 tem1 *= tem1;
                 tem2 *= tem2;
-                d1 = sqrt(tem1 + tem2); //�õ�1,2�ľ���
+                d1 = sqrt(tem1 + tem2);
 
-                tem1 = abs(pos_temp[2][0] - pos_temp[3][0]); // x3-x4
-                tem2 = abs(pos_temp[2][1] - pos_temp[3][1]); // y3-y4
+                tem1 = abs(pos_temp[2][0] - pos_temp[3][0]);
+                tem2 = abs(pos_temp[2][1] - pos_temp[3][1]);
                 tem1 *= tem1;
                 tem2 *= tem2;
-                d2 = sqrt(tem1 + tem2); //�õ�3,4�ľ���
+                d2 = sqrt(tem1 + tem2);
                 fac = (float)d1 / d2;
-                if (fac < 0.95 || fac > 1.05 || d1 == 0 || d2 == 0) //���ϸ�
+                if (fac < 0.95 || fac > 1.05 || d1 == 0 || d2 == 0)
                 {
                     cnt = 0;
-                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE); //�����4
-                    RTP_Drow_Touch_Point(20, 20, RED);                                  //����1
+                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE);
+                    RTP_Drow_Touch_Point(20, 20, RED);
                     RTP_Adj_Info_Show(pos_temp[0][0], pos_temp[0][1], pos_temp[1][0], pos_temp[1][1], pos_temp[2][0],
-                                      pos_temp[2][1], pos_temp[3][0], pos_temp[3][1], fac * 100); //��ʾ����
+                                      pos_temp[2][1], pos_temp[3][0], pos_temp[3][1], fac * 100);
                     continue;
                 }
                 tem1 = abs(pos_temp[0][0] - pos_temp[2][0]); // x1-x3
                 tem2 = abs(pos_temp[0][1] - pos_temp[2][1]); // y1-y3
                 tem1 *= tem1;
                 tem2 *= tem2;
-                d1 = sqrt(tem1 + tem2); //�õ�1,3�ľ���
+                d1 = sqrt(tem1 + tem2);
 
                 tem1 = abs(pos_temp[1][0] - pos_temp[3][0]); // x2-x4
                 tem2 = abs(pos_temp[1][1] - pos_temp[3][1]); // y2-y4
                 tem1 *= tem1;
                 tem2 *= tem2;
-                d2 = sqrt(tem1 + tem2); //�õ�2,4�ľ���
+                d2 = sqrt(tem1 + tem2);
                 fac = (float)d1 / d2;
-                if (fac < 0.95 || fac > 1.05) //���ϸ�
+                if (fac < 0.95 || fac > 1.05)
                 {
                     cnt = 0;
-                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE); //�����4
-                    RTP_Drow_Touch_Point(20, 20, RED);                                  //����1
+                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE);
+                    RTP_Drow_Touch_Point(20, 20, RED);
                     RTP_Adj_Info_Show(pos_temp[0][0], pos_temp[0][1], pos_temp[1][0], pos_temp[1][1], pos_temp[2][0],
-                                      pos_temp[2][1], pos_temp[3][0], pos_temp[3][1], fac * 100); //��ʾ����
+                                      pos_temp[2][1], pos_temp[3][0], pos_temp[3][1], fac * 100);
                     continue;
-                } //��ȷ��
-
-                //�Խ������
+                }
                 tem1 = abs(pos_temp[1][0] - pos_temp[2][0]); // x1-x3
                 tem2 = abs(pos_temp[1][1] - pos_temp[2][1]); // y1-y3
                 tem1 *= tem1;
                 tem2 *= tem2;
-                d1 = sqrt(tem1 + tem2); //�õ�1,4�ľ���
+                d1 = sqrt(tem1 + tem2);
 
                 tem1 = abs(pos_temp[0][0] - pos_temp[3][0]); // x2-x4
                 tem2 = abs(pos_temp[0][1] - pos_temp[3][1]); // y2-y4
                 tem1 *= tem1;
                 tem2 *= tem2;
-                d2 = sqrt(tem1 + tem2); //�õ�2,3�ľ���
+                d2 = sqrt(tem1 + tem2);
                 fac = (float)d1 / d2;
-                if (fac < 0.95 || fac > 1.05) //���ϸ�
+                if (fac < 0.95 || fac > 1.05)
                 {
                     cnt = 0;
-                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE); //�����4
-                    RTP_Drow_Touch_Point(20, 20, RED);                                  //����1
+                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE);
+                    RTP_Drow_Touch_Point(20, 20, RED);
                     RTP_Adj_Info_Show(pos_temp[0][0], pos_temp[0][1], pos_temp[1][0], pos_temp[1][1], pos_temp[2][0],
-                                      pos_temp[2][1], pos_temp[3][0], pos_temp[3][1], fac * 100); //��ʾ����
+                                      pos_temp[2][1], pos_temp[3][0], pos_temp[3][1], fac * 100);
                     continue;
-                } //��ȷ��
-                //������
-                tp_dev.xfac = (float)(lcddev.width - 40) / (pos_temp[1][0] - pos_temp[0][0]);       //�õ�xfac
-                tp_dev.xoff = (lcddev.width - tp_dev.xfac * (pos_temp[1][0] + pos_temp[0][0])) / 2; //�õ�xoff
+                }
+                tp_dev.xfac = (float)(lcddev.width - 40) / (pos_temp[1][0] - pos_temp[0][0]);
+                tp_dev.xoff = (lcddev.width - tp_dev.xfac * (pos_temp[1][0] + pos_temp[0][0])) / 2;
 
-                tp_dev.yfac = (float)(lcddev.height - 40) / (pos_temp[2][1] - pos_temp[0][1]);       //�õ�yfac
-                tp_dev.yoff = (lcddev.height - tp_dev.yfac * (pos_temp[2][1] + pos_temp[0][1])) / 2; //�õ�yoff
-                if (abs(tp_dev.xfac) > 2 || abs(tp_dev.yfac) > 2) //������Ԥ����෴��.
+                tp_dev.yfac = (float)(lcddev.height - 40) / (pos_temp[2][1] - pos_temp[0][1]);
+                tp_dev.yoff = (lcddev.height - tp_dev.yfac * (pos_temp[2][1] + pos_temp[0][1])) / 2;
+                if (abs(tp_dev.xfac) > 2 || abs(tp_dev.yfac) > 2)
                 {
                     cnt = 0;
-                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE); //�����4
-                    RTP_Drow_Touch_Point(20, 20, RED);                                  //����1
+                    RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, WHITE);
+                    RTP_Drow_Touch_Point(20, 20, RED);
                     LCD_ShowString(40, 26, 16, "TP Need readjust!", 1);
-                    tp_dev.touchtype = !tp_dev.touchtype; //�޸Ĵ�������.
-                    if (tp_dev.touchtype)                 // X,Y��������Ļ�෴
+                    tp_dev.touchtype = !tp_dev.touchtype;
+                    if (tp_dev.touchtype)
                     {
                         CMD_RDX = 0X90;
                         CMD_RDY = 0XD0;
                     }
-                    else // X,Y��������Ļ��ͬ
+                    else
                     {
                         CMD_RDX = 0XD0;
                         CMD_RDY = 0X90;
@@ -518,12 +505,12 @@ void RTP_Adjust(void)
                     continue;
                 }
                 POINT_COLOR = BLUE;
-                LCD_Clear(WHITE);                                          //����
-                LCD_ShowString(35, 110, 16, "Touch Screen Adjust OK!", 1); //У�����
+                LCD_Clear(WHITE);
+                LCD_ShowString(35, 110, 16, "Touch Screen Adjust OK!", 1);
                 delay_ms(1000);
                 RTP_Save_Adjdata();
-                LCD_Clear(WHITE); //����
-                return;           //У�����
+                LCD_Clear(WHITE);
+                return;
             }
         }
         delay_ms(10);
@@ -547,39 +534,36 @@ void RTP_Adjust(void)
 u8 RTP_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
-    //ע��,ʱ��ʹ��֮��,��GPIO�Ĳ�������Ч
-    //��������֮ǰ,����ʹ��ʱ��.����ʵ���������������
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC, ENABLE); //ʹ��GPIOB,C,Fʱ��
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC, ENABLE);
 
-    // GPIOB1,2��ʼ������
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2; // PB1/PB2 ����Ϊ��������
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;           //����ģʽ
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;         //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;     // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;           //����
-    GPIO_Init(GPIOB, &GPIO_InitStructure);                 //��ʼ��
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;     // PB0����Ϊ�������
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; //���ģʽ
-    GPIO_Init(GPIOB, &GPIO_InitStructure);        //��ʼ��
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_13; // PC13����Ϊ�������
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;           //���ģʽ
-    GPIO_Init(GPIOC, &GPIO_InitStructure);                  //��ʼ��
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_13;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
 
 #if SCAN_TYPE
     Touch_EXTI_Init();
 #endif
 
-    RTP_Read_XY(&tp_dev.x[0], &tp_dev.y[0]); //��һ�ζ�ȡ��ʼ��
+    RTP_Read_XY(&tp_dev.x[0], &tp_dev.y[0]);
     if (RTP_Get_Adjdata())
     {
-        return 0; //�Ѿ�У׼
+        return 0;
     }
-    else //δУ׼?
+    else
     {
-        LCD_Clear(WHITE); //����
-        RTP_Adjust();     //��ĻУ׼
+        LCD_Clear(WHITE);
+        RTP_Adjust();
         RTP_Save_Adjdata();
     }
     RTP_Get_Adjdata();

@@ -3,12 +3,7 @@
 #include "spi.h"
 #include "usart.h"
 
-u16 W25QXX_TYPE = W25Q64; //Ĭ����W25Q64
-
-// 4KbytesΪһ��Sector
-// 16������Ϊ1��Block
-// W25Q64
-//����Ϊ8M�ֽ�,����64��Block,2048��Sector
+u16 W25QXX_TYPE = W25Q64;
 
 /*****************************************************************************
  * @name       :void W25Q64_Init(void)
@@ -20,19 +15,18 @@ u16 W25QXX_TYPE = W25Q64; //Ĭ����W25Q64
 void W25Q64_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE); //ʹ��GPIOBʱ��
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE); //ʹ��GPIOGʱ��
-                                                          // GPIOB14
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;            // PB14
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;         //���
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;        //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;    // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;          //����
-    GPIO_Init(GPIOB, &GPIO_InitStructure);                //��ʼ��
-    W25Q64_CS = 1;                                        // SPI FLASH��ѡ��
-    SPI1_Init();                                          //��ʼ��SPI
-    SPI1_SetSpeed(SPI_BaudRatePrescaler_4);               //����Ϊ21Mʱ��,����ģʽ
-    W25QXX_TYPE = W25QXX_ReadID();                        //��ȡFLASH ID.
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    W25Q64_CS = 1;
+    SPI1_Init();
+    SPI1_SetSpeed(SPI_BaudRatePrescaler_4);
+    W25QXX_TYPE = W25QXX_ReadID();
 }
 
 /*****************************************************************************
@@ -52,10 +46,10 @@ void W25Q64_Init(void)
 u8 W25Q64_ReadSR(void)
 {
     u8 byte = 0;
-    W25Q64_CS = 0;                          //ʹ������
-    SPI1_ReadWriteByte(W25X_ReadStatusReg); //���Ͷ�ȡ״̬�Ĵ�������
-    byte = SPI1_ReadWriteByte(0Xff);        //��ȡһ���ֽ�
-    W25Q64_CS = 1;                          //ȡ��Ƭѡ
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_ReadStatusReg);
+    byte = SPI1_ReadWriteByte(0Xff);
+    W25Q64_CS = 1;
     return byte;
 }
 
@@ -76,10 +70,10 @@ u8 W25Q64_ReadSR(void)
 ******************************************************************************/
 void W25Q64_Write_SR(u8 sr)
 {
-    W25Q64_CS = 0;                           //ʹ������
-    SPI1_ReadWriteByte(W25X_WriteStatusReg); //����дȡ״̬�Ĵ�������
-    SPI1_ReadWriteByte(sr);                  //д��һ���ֽ�
-    W25Q64_CS = 1;                           //ȡ��Ƭѡ
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_WriteStatusReg);
+    SPI1_ReadWriteByte(sr);
+    W25Q64_CS = 1;
 }
 
 /*****************************************************************************
@@ -91,9 +85,9 @@ void W25Q64_Write_SR(u8 sr)
  ******************************************************************************/
 void W25Q64_Write_Enable(void)
 {
-    W25Q64_CS = 0;                        //ʹ������
-    SPI1_ReadWriteByte(W25X_WriteEnable); //����дʹ��
-    W25Q64_CS = 1;                        //ȡ��Ƭѡ
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_WriteEnable);
+    W25Q64_CS = 1;
 }
 
 /*****************************************************************************
@@ -105,9 +99,9 @@ void W25Q64_Write_Enable(void)
  ******************************************************************************/
 void W25Q64_Write_Disable(void)
 {
-    W25Q64_CS = 0;                         //ʹ������
-    SPI1_ReadWriteByte(W25X_WriteDisable); //����д��ָֹ��
-    W25Q64_CS = 1;                         //ȡ��Ƭѡ
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_WriteDisable);
+    W25Q64_CS = 1;
 }
 
 /*****************************************************************************
@@ -125,7 +119,7 @@ u16 W25QXX_ReadID(void)
 {
     u16 Temp = 0;
     W25Q64_CS = 0;
-    SPI1_ReadWriteByte(0x90); //���Ͷ�ȡID����
+    SPI1_ReadWriteByte(0x90);
     SPI1_ReadWriteByte(0x00);
     SPI1_ReadWriteByte(0x00);
     SPI1_ReadWriteByte(0x00);
@@ -148,14 +142,14 @@ u16 W25QXX_ReadID(void)
 void W25Q64_Read(u8 *pBuffer, u32 ReadAddr, u16 NumByteToRead)
 {
     u16 i;
-    W25Q64_CS = 0;                              //ʹ������
-    SPI1_ReadWriteByte(W25X_ReadData);          //���Ͷ�ȡ����
-    SPI1_ReadWriteByte((u8)((ReadAddr) >> 16)); //����24bit��ַ
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_ReadData);
+    SPI1_ReadWriteByte((u8)((ReadAddr) >> 16));
     SPI1_ReadWriteByte((u8)((ReadAddr) >> 8));
     SPI1_ReadWriteByte((u8)ReadAddr);
     for (i = 0; i < NumByteToRead; i++)
     {
-        pBuffer[i] = SPI1_ReadWriteByte(0XFF); //ѭ������
+        pBuffer[i] = SPI1_ReadWriteByte(0XFF);
     }
     W25Q64_CS = 1;
 }
@@ -174,18 +168,18 @@ void W25Q64_Read(u8 *pBuffer, u32 ReadAddr, u16 NumByteToRead)
 void W25Q64_Write_Page(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 {
     u16 i;
-    W25Q64_Write_Enable();                       // SET WEL
-    W25Q64_CS = 0;                               //ʹ������
-    SPI1_ReadWriteByte(W25X_PageProgram);        //����дҳ����
-    SPI1_ReadWriteByte((u8)((WriteAddr) >> 16)); //����24bit��ַ
+    W25Q64_Write_Enable();
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_PageProgram);
+    SPI1_ReadWriteByte((u8)((WriteAddr) >> 16));
     SPI1_ReadWriteByte((u8)((WriteAddr) >> 8));
     SPI1_ReadWriteByte((u8)WriteAddr);
     for (i = 0; i < NumByteToWrite; i++)
     {
-        SPI1_ReadWriteByte(pBuffer[i]); //ѭ��д��
+        SPI1_ReadWriteByte(pBuffer[i]);
     }
-    W25Q64_CS = 1;      //ȡ��Ƭѡ
-    W25Q64_Wait_Busy(); //�ȴ�д�����
+    W25Q64_CS = 1;
+    W25Q64_Wait_Busy();
 }
 
 /*****************************************************************************
@@ -205,29 +199,29 @@ void W25Q64_Write_Page(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 void W25Q64_Write_NoCheck(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite)
 {
     u16 pageremain;
-    pageremain = 256 - WriteAddr % 256; //��ҳʣ����ֽ���
+    pageremain = 256 - WriteAddr % 256;
     if (NumByteToWrite <= pageremain)
-        pageremain = NumByteToWrite; //������256���ֽ�
+        pageremain = NumByteToWrite;
     while (1)
     {
         W25Q64_Write_Page(pBuffer, WriteAddr, pageremain);
         if (NumByteToWrite == pageremain)
         {
-            break; //д�������
+            break;
         }
         else // NumByteToWrite>pageremain
         {
             pBuffer += pageremain;
             WriteAddr += pageremain;
 
-            NumByteToWrite -= pageremain; //��ȥ�Ѿ�д���˵��ֽ���
+            NumByteToWrite -= pageremain;
             if (NumByteToWrite > 256)
             {
-                pageremain = 256; //һ�ο���д��256���ֽ�
+                pageremain = 256;
             }
             else
             {
-                pageremain = NumByteToWrite; //����256���ֽ���
+                pageremain = NumByteToWrite;
             }
         }
     }
@@ -253,53 +247,53 @@ void W25Q64_Write(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite)
     u16 i;
     u8 *W25QXX_BUF;
     W25QXX_BUF = W25Q64_BUFFER;
-    secpos = WriteAddr / 4096; //������ַ
-    secoff = WriteAddr % 4096; //�������ڵ�ƫ��
-    secremain = 4096 - secoff; //����ʣ��ռ��С
-    // printf("ad:%X,nb:%X\r\n",WriteAddr,NumByteToWrite);//������
+    secpos = WriteAddr / 4096;
+    secoff = WriteAddr % 4096;
+    secremain = 4096 - secoff;
+    // printf("ad:%X,nb:%X\r\n",WriteAddr,NumByteToWrite);
     if (NumByteToWrite <= secremain)
-        secremain = NumByteToWrite; //������4096���ֽ�
+        secremain = NumByteToWrite;
     while (1)
     {
-        W25Q64_Read(W25QXX_BUF, secpos * 4096, 4096); //������������������
-        for (i = 0; i < secremain; i++)               //У������
+        W25Q64_Read(W25QXX_BUF, secpos * 4096, 4096);
+        for (i = 0; i < secremain; i++)
         {
             if (W25QXX_BUF[secoff + i] != 0XFF)
             {
-                break; //��Ҫ����
+                break;
             }
         }
-        if (i < secremain) //��Ҫ����
+        if (i < secremain)
         {
-            W25Q64_Erase_Sector(secpos);    //�����������
-            for (i = 0; i < secremain; i++) //����
+            W25Q64_Erase_Sector(secpos);
+            for (i = 0; i < secremain; i++)
             {
                 W25QXX_BUF[i + secoff] = pBuffer[i];
             }
-            W25Q64_Write_NoCheck(W25QXX_BUF, secpos * 4096, 4096); //д����������
+            W25Q64_Write_NoCheck(W25QXX_BUF, secpos * 4096, 4096);
         }
         else
         {
-            W25Q64_Write_NoCheck(pBuffer, WriteAddr, secremain); //д�Ѿ������˵�,ֱ��д������ʣ������.
+            W25Q64_Write_NoCheck(pBuffer, WriteAddr, secremain);
         }
         if (NumByteToWrite == secremain)
         {
-            break; //д�������
+            break;
         }
-        else //д��δ����
+        else
         {
-            secpos++;                    //������ַ��1
-            secoff = 0;                  //ƫ��λ��Ϊ0
-            pBuffer += secremain;        //ָ��ƫ��
-            WriteAddr += secremain;      //д��ַƫ��
-            NumByteToWrite -= secremain; //�ֽ����ݼ�
+            secpos++;
+            secoff = 0;
+            pBuffer += secremain;
+            WriteAddr += secremain;
+            NumByteToWrite -= secremain;
             if (NumByteToWrite > 4096)
             {
-                secremain = 4096; //��һ����������д����
+                secremain = 4096;
             }
             else
             {
-                secremain = NumByteToWrite; //��һ����������д����
+                secremain = NumByteToWrite;
             }
         }
     }
@@ -314,12 +308,12 @@ void W25Q64_Write(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite)
  ******************************************************************************/
 void W25Q64_Erase_Chip(void)
 {
-    W25Q64_Write_Enable(); // SET WEL
+    W25Q64_Write_Enable();
     W25Q64_Wait_Busy();
-    W25Q64_CS = 0;                      //ʹ������
-    SPI1_ReadWriteByte(W25X_ChipErase); //����Ƭ��������
-    W25Q64_CS = 1;                      //ȡ��Ƭѡ
-    W25Q64_Wait_Busy();                 //�ȴ�оƬ��������
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_ChipErase);
+    W25Q64_CS = 1;
+    W25Q64_Wait_Busy();
 }
 
 /*****************************************************************************
@@ -331,17 +325,17 @@ void W25Q64_Erase_Chip(void)
  ******************************************************************************/
 void W25Q64_Erase_Sector(u32 Dst_Addr)
 {
-    //	printf("fe:%x\r\n",Dst_Addr);	//����falsh�������,������
+    //	printf("fe:%x\r\n",Dst_Addr);
     Dst_Addr *= 4096;
-    W25Q64_Write_Enable(); // SET WEL
+    W25Q64_Write_Enable();
     W25Q64_Wait_Busy();
-    W25Q64_CS = 0;                              //ʹ������
-    SPI1_ReadWriteByte(W25X_SectorErase);       //������������ָ��
-    SPI1_ReadWriteByte((u8)((Dst_Addr) >> 16)); //����24bit��ַ
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_SectorErase);
+    SPI1_ReadWriteByte((u8)((Dst_Addr) >> 16));
     SPI1_ReadWriteByte((u8)((Dst_Addr) >> 8));
     SPI1_ReadWriteByte((u8)Dst_Addr);
-    W25Q64_CS = 1;      //ȡ��Ƭѡ
-    W25Q64_Wait_Busy(); //�ȴ��������
+    W25Q64_CS = 1;
+    W25Q64_Wait_Busy();
 }
 
 /*****************************************************************************
@@ -354,7 +348,7 @@ void W25Q64_Erase_Sector(u32 Dst_Addr)
 void W25Q64_Wait_Busy(void)
 {
     while ((W25Q64_ReadSR() & 0x01) == 0x01)
-        ; // �ȴ�BUSYλ���
+        ;
 }
 
 /*****************************************************************************
@@ -366,10 +360,10 @@ void W25Q64_Wait_Busy(void)
  ******************************************************************************/
 void W25Q64_PowerDown(void)
 {
-    W25Q64_CS = 0;                      //ʹ������
-    SPI1_ReadWriteByte(W25X_PowerDown); //���͵�������
-    W25Q64_CS = 1;                      //ȡ��Ƭѡ
-    delay_us(3);                        //�ȴ�TPD
+    W25Q64_CS = 0;
+    SPI1_ReadWriteByte(W25X_PowerDown);
+    W25Q64_CS = 1;
+    delay_us(3);
 }
 
 /*****************************************************************************
@@ -381,8 +375,8 @@ void W25Q64_PowerDown(void)
  ******************************************************************************/
 void W25Q64_WAKEUP(void)
 {
-    W25Q64_CS = 0;                             //ʹ������
+    W25Q64_CS = 0;
     SPI1_ReadWriteByte(W25X_ReleasePowerDown); //  send W25X_PowerDown command 0xAB
-    W25Q64_CS = 1;                             //ȡ��Ƭѡ
-    delay_us(3);                               //�ȴ�TRES1
+    W25Q64_CS = 1;
+    delay_us(3);
 }

@@ -1,8 +1,8 @@
 #ifndef __AS5600_H
 #define __AS5600_H
 /* PB10 SCL PB11 SDA */
+#include "delay.h"
 #include "stdbool.h"
-#include "stm32f4xx.h"
 #include "sys.h"
 
 #define AS_IN()                                                                                                        \
@@ -75,6 +75,5 @@ u8 get_magnet_strength(void);
 u8 burn_angle();
 u8 burn_max_angle_and_config();
 int16_t get_angle(void);
-
 
 #endif

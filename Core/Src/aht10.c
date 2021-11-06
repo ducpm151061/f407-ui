@@ -45,7 +45,7 @@ static u8 AHT_IIC_Wait_Ack(void)
     delay_us(1);
     AHT_IIC_SCL = 1;
     delay_us(1);
-    while (READ_AHT_SDA)
+    while (AHT_SDA_READ)
     {
         ucErrTime++;
         if (ucErrTime > 250)
@@ -107,7 +107,7 @@ static u8 AHT_IIC_Read_Byte(unsigned char ack)
         delay_us(2);
         AHT_IIC_SCL = 1;
         receive <<= 1;
-        if (READ_AHT_SDA)
+        if (AHT_SDA_READ)
         {
             receive++;
         }

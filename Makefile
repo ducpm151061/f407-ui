@@ -77,6 +77,7 @@ C_SOURCES +=Core/Src/ws_AT45DBXX.c
 C_SOURCES +=Core/Src/custom_malloc.c 
 C_SOURCES +=Core/Src/as5600.c 
 C_SOURCES +=Core/Src/aht10.c 
+C_SOURCES +=Core/Src/tcs34725.c 
 # C_SOURCES +=Core/Src/stm32f4xx_it.c 
 C_SOURCES +=Drivers/STM32F4xx_FWLIB/src/misc.c 
 # C_SOURCES +=Drivers/STM32F4xx_FWLIB/src/stm32f4xx_adc.c 

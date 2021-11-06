@@ -83,7 +83,6 @@ typedef enum
     SD_OK = 0
 } SD_Error;
 
-// SD��CSD�Ĵ�������
 typedef struct
 {
     u8 CSDStruct;           /*!< CSD structure */

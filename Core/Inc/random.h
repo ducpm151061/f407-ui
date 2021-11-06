@@ -1,6 +1,7 @@
 #ifndef __RANDOM_H__
 #define __RANDOM_H__
 
+#include "delay.h"
 #include "sys.h"
 
 // initialization

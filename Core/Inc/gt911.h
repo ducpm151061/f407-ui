@@ -1,4 +1,3 @@
-
 #ifndef __GT911_DRIVER_H
 #define __GT911_DRIVER_H
 

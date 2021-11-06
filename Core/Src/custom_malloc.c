@@ -1,14 +1,15 @@
 #include "custom_malloc.h"
-#pragma *pack *(32)
-u8 mem1base[MEM1_MAX_SIZE];
-u8 mem2base[MEM2_MAX_SIZE] __attribute__((at(0X68000000)));
-// u8 mem3base[MEM3_MAX_SIZE] __attribute__((at(0X10000000)));
-u8 mem3base[MEM3_MAX_SIZE] __attribute__((section(".ccmram")));
+// #pragma *pack *(32)
+
+u8 mem1base[MEM1_MAX_SIZE] __attribute__((aligned(32)));
+u8 mem2base[MEM2_MAX_SIZE] __attribute__((at(0X68000000))) __attribute__((aligned(32)));
+u8 mem3base[MEM3_MAX_SIZE] __attribute__((at(0X10000000))) __attribute__((aligned(32)));
+// u8 mem3base[MEM3_MAX_SIZE] __attribute__((section(".ccmram")));
 
 u16 mem1mapbase[MEM1_ALLOC_TABLE_SIZE];
 u16 mem2mapbase[MEM2_ALLOC_TABLE_SIZE] __attribute__((at(0X68000000 + MEM2_MAX_SIZE)));
-// u16 mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((at(0X10000000 + MEM3_MAX_SIZE)));
-u16 mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((section(".ccmram")));
+u16 mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((at(0X10000000 + MEM3_MAX_SIZE)));
+// u16 mem3mapbase[MEM3_ALLOC_TABLE_SIZE] __attribute__((section(".ccmram")));
 
 const u32 memtblsize[SRAMBANK] = {MEM1_ALLOC_TABLE_SIZE, MEM2_ALLOC_TABLE_SIZE, MEM3_ALLOC_TABLE_SIZE};
 const u32 memblksize[SRAMBANK] = {MEM1_BLOCK_SIZE, MEM2_BLOCK_SIZE, MEM3_BLOCK_SIZE};

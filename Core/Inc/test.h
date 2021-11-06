@@ -41,6 +41,7 @@
 #include "fontupd.h"
 #include "piclib.h"
 #include "sdio_sdcard.h"
+#include "tcs34725.h"
 #include "text.h"
 
 #include "ws_AT45DBXX.h"

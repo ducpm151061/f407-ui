@@ -1,5 +1,6 @@
 #ifndef __IIC_H
 #define __IIC_H
+#include "delay.h"
 #include "sys.h"
 /* PB10 SCL PB11 SDA */
 
@@ -23,7 +24,7 @@
 
 #define AHT_IIC_SCL PBout(10) // SCL
 #define AHT_IIC_SDA PBout(11) // SDA
-#define READ_AHT_SDA PBin(11)
+#define AHT_SDA_READ PBin(11)
 
 void AHT_Init(void);
 void AHT_Measure(void);

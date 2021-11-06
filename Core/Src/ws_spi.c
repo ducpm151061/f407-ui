@@ -73,7 +73,7 @@ void SPI2_Send_byte(u16 data)
 
 u16 SPI2_Receive_byte(void)
 {
-    while (!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) )
+    while (!SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE))
         ;
     SPI_I2S_SendData(SPI2, 0x00);
 

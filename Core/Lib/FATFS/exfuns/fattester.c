@@ -173,15 +173,15 @@ u32 mf_showfree(u8 *drv)
         if (tot_sect < 20480)
         {
             /* Print free space in unit of KB (assuming 512 bytes/sector) */
-            printf("\r\n����������:%d KB\r\n"
-                   "���ÿռ�:%d KB\r\n",
+            printf("\r\nfree space:%d KB\r\n"
+                   ":%d KB\r\n",
                    tot_sect >> 1, fre_sect >> 1);
         }
         else
         {
             /* Print free space in unit of KB (assuming 512 bytes/sector) */
-            printf("\r\n����������:%d MB\r\n"
-                   "���ÿռ�:%d MB\r\n",
+            printf("\r\nfree space in unit:%d MB\r\n"
+                   ":%d MB\r\n",
                    tot_sect >> 11, fre_sect >> 11);
         }
     }

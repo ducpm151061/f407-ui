@@ -1,13 +1,7 @@
 #include "lcd.h"
-#include "delay.h"
-#include "stdlib.h"
-#include "usart.h"
 
-//����LCD��Ҫ����
-//Ĭ��Ϊ����
 _lcd_dev lcddev;
 
-//������ɫ,������ɫ
 u16 POINT_COLOR = 0x0000, BACK_COLOR = 0xFFFF;
 u16 DeviceCode;
 
@@ -20,8 +14,8 @@ u16 DeviceCode;
  ******************************************************************************/
 void LCD_WR_REG(vu16 data)
 {
-    data = data;         //ʹ��-O2�Ż���ʱ��,����������ʱ
-    LCD->LCD_REG = data; //д��Ҫд�ļĴ������
+    data = data;
+    LCD->LCD_REG = data;
 }
 
 /*****************************************************************************
@@ -33,8 +27,8 @@ void LCD_WR_REG(vu16 data)
  ******************************************************************************/
 void LCD_WR_DATA(vu16 data)
 {
-    data = data;         //ʹ��-O2�Ż���ʱ��,����������ʱ
-    LCD->LCD_RAM = data; //д��Ҫд������
+    data = data;
+    LCD->LCD_RAM = data;
 }
 
 /*****************************************************************************
@@ -46,7 +40,7 @@ void LCD_WR_DATA(vu16 data)
  ******************************************************************************/
 u16 LCD_RD_DATA(void)
 {
-    vu16 data; //��ֹ���Ż�
+    vu16 data;
     data = LCD->LCD_RAM;
     return data;
 }
@@ -61,8 +55,8 @@ u16 LCD_RD_DATA(void)
 ******************************************************************************/
 void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue)
 {
-    LCD->LCD_REG = LCD_Reg;      //д��Ҫд�ļĴ������
-    LCD->LCD_RAM = LCD_RegValue; //д������
+    LCD->LCD_REG = LCD_Reg;
+    LCD->LCD_RAM = LCD_RegValue;
 }
 
 /*****************************************************************************
@@ -78,7 +72,7 @@ void LCD_ReadReg(u16 LCD_Reg, u16 *Rval, int n)
     while (n--)
     {
         *(Rval++) = LCD_RD_DATA();
-        delay_us(300); //�������ʱ
+        delay_us(300);
     }
 }
 
@@ -139,14 +133,14 @@ u16 Lcd_ReadData_16Bit(void)
     {
         return r;
     }
-    delay_us(1); //��ʱ1us
+    delay_us(1);
     // real color
     r = LCD_RD_DATA();
     if ((lcddev.id == 0xB509) || (lcddev.id == 0x7793) || (lcddev.id == 0x9486) || (lcddev.id == 0x7796))
     {
         return r;
     }
-    delay_us(1); //��ʱ1us
+    delay_us(1);
     g = LCD_RD_DATA();
     if ((lcddev.id == 0x9341) || (lcddev.id == 0x9488) || (lcddev.id == 0x5310) || (lcddev.id == 0x5510))
     {
@@ -165,7 +159,7 @@ u16 Lcd_ReadData_16Bit(void)
 ******************************************************************************/
 void LCD_DrawPoint(u16 x, u16 y)
 {
-    LCD_SetCursor(x, y); //���ù��λ��
+    LCD_SetCursor(x, y);
     Lcd_WriteData_16Bit(POINT_COLOR);
 }
 
@@ -182,9 +176,9 @@ u16 LCD_ReadPoint(u16 x, u16 y)
     u16 color;
     if (x >= lcddev.width || y >= lcddev.height)
     {
-        return 0; //�����˷�Χ,ֱ�ӷ���
+        return 0;
     }
-    LCD_SetCursor(x, y); //���ù��λ��
+    LCD_SetCursor(x, y);
     LCD_ReadRAM_Prepare();
     color = Lcd_ReadData_16Bit();
     return color;
@@ -217,13 +211,13 @@ void LCD_Clear(u16 Color)
  ******************************************************************************/
 void LCD_PWM_BackLightSet(u8 pwm)
 {
-    LCD_WR_REG(0xBE);        //����PWM���
-    LCD_WR_DATA(0x05);       // 1����PWMƵ��
-    LCD_WR_DATA(pwm * 2.55); // 2����PWMռ�ձ�
-    LCD_WR_DATA(0x01);       // 3����C
-    LCD_WR_DATA(0xFF);       // 4����D
-    LCD_WR_DATA(0x00);       // 5����E
-    LCD_WR_DATA(0x00);       // 6����F
+    LCD_WR_REG(0xBE);
+    LCD_WR_DATA(0x05);
+    LCD_WR_DATA(pwm * 2.55);
+    LCD_WR_DATA(0x01);
+    LCD_WR_DATA(0xFF);
+    LCD_WR_DATA(0x00);
+    LCD_WR_DATA(0x00);
 }
 
 /*****************************************************************************
@@ -241,42 +235,42 @@ void LCD_GPIOInit(void)
     FSMC_NORSRAMTimingInitTypeDef writeTiming;
 
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE, ENABLE); //ʹ��PB,PD,PEʱ��
-    RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE); //ʹ��FSMCʱ��
+    RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;        // PB15 �������,���Ʊ���
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;     //��ͨ���ģʽ
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;    //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;      //����
-    GPIO_Init(GPIOB, &GPIO_InitStructure);            //��ʼ�� //PB15 �������,���Ʊ���
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;         // PD13 �������,���Ƹ�λ
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;      //��ͨ���ģʽ
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;     //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;       //����
-    GPIO_Init(GPIOD, &GPIO_InitStructure); //��ʼ�� //PB15 �������,���Ʊ���
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = (3 << 0) | (3 << 4) | (7 << 8) | (3 << 14); // PD0,1,4,5,8,9,10,14,15 AF OUT
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;                              //�������
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;                            //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;                        // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;                              //����
-    GPIO_Init(GPIOD, &GPIO_InitStructure);                                    //��ʼ��
+    GPIO_InitStructure.GPIO_Pin = (3 << 0) | (3 << 4) | (7 << 8) | (3 << 14);
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = (0X1FF << 7);        // PE7~15,AF OUT
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;       //�������
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;     //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;       //����
-    GPIO_Init(GPIOE, &GPIO_InitStructure);             //��ʼ��
+    GPIO_InitStructure.GPIO_Pin = (0X1FF << 7);
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOE, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_11; // PD11,FSMC_A16
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;            //�������
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;          //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;      // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;            //����
-    GPIO_Init(GPIOD, &GPIO_InitStructure);                  //��ʼ��
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOD, &GPIO_InitStructure);
 
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource0, GPIO_AF_FSMC);
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource1, GPIO_AF_FSMC);
@@ -301,66 +295,66 @@ void LCD_GPIOInit(void)
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource7, GPIO_AF_FSMC); // PD7 NE1
     GPIO_PinAFConfig(GPIOD, GPIO_PinSource11, GPIO_AF_FSMC);
 
-    readWriteTiming.FSMC_AddressSetupTime = 0XF; //��ַ����ʱ�䣨ADDSET��Ϊ16��HCLK 1/168M=6ns*16=96ns
-    readWriteTiming.FSMC_AddressHoldTime = 0x00; //��ַ����ʱ�䣨ADDHLD��ģʽAδ�õ�
-    readWriteTiming.FSMC_DataSetupTime = 60;     //���ݱ���ʱ��Ϊ60��HCLK	=6*60=360ns
+    readWriteTiming.FSMC_AddressSetupTime = 0XF;
+    readWriteTiming.FSMC_AddressHoldTime = 0x00;
+    readWriteTiming.FSMC_DataSetupTime = 60;
     readWriteTiming.FSMC_BusTurnAroundDuration = 0x00;
     readWriteTiming.FSMC_CLKDivision = 0x00;
     readWriteTiming.FSMC_DataLatency = 0x00;
-    readWriteTiming.FSMC_AccessMode = FSMC_AccessMode_A; //ģʽA
+    readWriteTiming.FSMC_AccessMode = FSMC_AccessMode_A;
 
-    writeTiming.FSMC_AddressSetupTime = 9;   //��ַ����ʱ�䣨ADDSET��Ϊ9��HCLK =54ns
-    writeTiming.FSMC_AddressHoldTime = 0x00; //��ַ����ʱ�䣨A
-    writeTiming.FSMC_DataSetupTime = 8;      //���ݱ���ʱ��Ϊ6ns*9��HCLK=54ns
+    writeTiming.FSMC_AddressSetupTime = 9;
+    writeTiming.FSMC_AddressHoldTime = 0x00;
+    writeTiming.FSMC_DataSetupTime = 8;
     writeTiming.FSMC_BusTurnAroundDuration = 0x00;
     writeTiming.FSMC_CLKDivision = 0x00;
     writeTiming.FSMC_DataLatency = 0x00;
-    writeTiming.FSMC_AccessMode = FSMC_AccessMode_A; //ģʽA
+    writeTiming.FSMC_AccessMode = FSMC_AccessMode_A;
 
-    FSMC_NORSRAMInitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM1; //  ��������ʹ��NE1 ��Ҳ�Ͷ�ӦBTCR[6],[7]��
-    FSMC_NORSRAMInitStructure.FSMC_DataAddressMux = FSMC_DataAddressMux_Disable; // ���������ݵ�ַ
-    FSMC_NORSRAMInitStructure.FSMC_MemoryType = FSMC_MemoryType_SRAM;            // FSMC_MemoryType_SRAM;  //SRAM
-    FSMC_NORSRAMInitStructure.FSMC_MemoryDataWidth = FSMC_MemoryDataWidth_16b; //�洢�����ݿ���Ϊ16bit
-    FSMC_NORSRAMInitStructure.FSMC_BurstAccessMode = FSMC_BurstAccessMode_Disable; // FSMC_BurstAccessMode_Disable;
+    FSMC_NORSRAMInitStructure.FSMC_Bank = FSMC_Bank1_NORSRAM1;
+    FSMC_NORSRAMInitStructure.FSMC_DataAddressMux = FSMC_DataAddressMux_Disable;
+    FSMC_NORSRAMInitStructure.FSMC_MemoryType = FSMC_MemoryType_SRAM;
+    FSMC_NORSRAMInitStructure.FSMC_MemoryDataWidth = FSMC_MemoryDataWidth_16b;
+    FSMC_NORSRAMInitStructure.FSMC_BurstAccessMode = FSMC_BurstAccessMode_Disable;
     FSMC_NORSRAMInitStructure.FSMC_WaitSignalPolarity = FSMC_WaitSignalPolarity_Low;
     FSMC_NORSRAMInitStructure.FSMC_AsynchronousWait = FSMC_AsynchronousWait_Disable;
     FSMC_NORSRAMInitStructure.FSMC_WrapMode = FSMC_WrapMode_Disable;
     FSMC_NORSRAMInitStructure.FSMC_WaitSignalActive = FSMC_WaitSignalActive_BeforeWaitState;
-    FSMC_NORSRAMInitStructure.FSMC_WriteOperation = FSMC_WriteOperation_Enable; //  �洢��дʹ��
+    FSMC_NORSRAMInitStructure.FSMC_WriteOperation = FSMC_WriteOperation_Enable;
     FSMC_NORSRAMInitStructure.FSMC_WaitSignal = FSMC_WaitSignal_Disable;
-    FSMC_NORSRAMInitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Enable; // ��дʹ�ò�ͬ��ʱ��
+    FSMC_NORSRAMInitStructure.FSMC_ExtendedMode = FSMC_ExtendedMode_Enable;
     FSMC_NORSRAMInitStructure.FSMC_WriteBurst = FSMC_WriteBurst_Disable;
-    FSMC_NORSRAMInitStructure.FSMC_ReadWriteTimingStruct = &readWriteTiming; //��дʱ��
-    FSMC_NORSRAMInitStructure.FSMC_WriteTimingStruct = &writeTiming;         //дʱ��
+    FSMC_NORSRAMInitStructure.FSMC_ReadWriteTimingStruct = &readWriteTiming;
+    FSMC_NORSRAMInitStructure.FSMC_WriteTimingStruct = &writeTiming;
 
-    FSMC_NORSRAMInit(&FSMC_NORSRAMInitStructure); //��ʼ��FSMC����
-    FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM1, ENABLE); // ʹ��BANK1
+    FSMC_NORSRAMInit(&FSMC_NORSRAMInitStructure);
+    FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM1, ENABLE);
 }
 
 void LCD_Set_BWTR(void)
 {
-    FSMC_Bank1E->BWTR[0] &= ~(0XF << 0); //��ַ����ʱ��(ADDSET)����
-    FSMC_Bank1E->BWTR[0] &= ~(0XF << 8); //���ݱ���ʱ������
+    FSMC_Bank1E->BWTR[0] &= ~(0XF << 0);
+    FSMC_Bank1E->BWTR[0] &= ~(0XF << 8);
     if (lcddev.id == 0x9341)
     {
-        FSMC_Bank1E->BWTR[0] |= 4 << 0; //��ַ����ʱ��(ADDSET)Ϊ4��HCLK =24ns
-        FSMC_Bank1E->BWTR[0] |= 3 << 8; //���ݱ���ʱ��(DATAST)Ϊ6ns*3��HCLK=18ns
+        FSMC_Bank1E->BWTR[0] |= 4 << 0;
+        FSMC_Bank1E->BWTR[0] |= 3 << 8;
     }
     else if ((lcddev.id == 0x9486) || (lcddev.id == 0x9488) || (lcddev.id == 0x5310) || (lcddev.id == 0x7796) ||
              (lcddev.id == 0x1963))
     {
-        FSMC_Bank1E->BWTR[0] |= 4 << 0; //��ַ����ʱ��(ADDSET)Ϊ4��HCLK =24ns
-        FSMC_Bank1E->BWTR[0] |= 4 << 8; //���ݱ���ʱ��(DATAST)Ϊ6ns*4��HCLK=24ns
+        FSMC_Bank1E->BWTR[0] |= 4 << 0;
+        FSMC_Bank1E->BWTR[0] |= 4 << 8;
     }
     else if ((lcddev.id == 0xB509) || (lcddev.id == 0x7793))
     {
-        FSMC_Bank1E->BWTR[0] |= 5 << 0; //��ַ����ʱ��(ADDSET)Ϊ5��HCLK =30ns
-        FSMC_Bank1E->BWTR[0] |= 4 << 8; //���ݱ���ʱ��(DATAST)Ϊ6ns*4��HCLK=24ns
+        FSMC_Bank1E->BWTR[0] |= 5 << 0;
+        FSMC_Bank1E->BWTR[0] |= 4 << 8;
     }
     else if (lcddev.id == 0x5510)
     {
-        FSMC_Bank1E->BWTR[0] |= 3 << 0; //��ַ����ʱ��(ADDSET)Ϊ3��HCLK =18ns
-        FSMC_Bank1E->BWTR[0] |= 2 << 8; //���ݱ���ʱ��(DATAST)Ϊ6ns*2��HCLK=12ns
+        FSMC_Bank1E->BWTR[0] |= 3 << 0;
+        FSMC_Bank1E->BWTR[0] |= 2 << 8;
     }
 }
 
@@ -382,7 +376,7 @@ void LCD_Init(void)
     switch (lcddev.id)
     {
     case 0x9341: {
-        //*************ILI9341��ʼ��**********//
+        //*************ILI9341**********//
         LCD_WR_REG(0xCF);
         LCD_WR_DATA(0x00);
         LCD_WR_DATA(0xC9); // C1
@@ -480,7 +474,7 @@ void LCD_Init(void)
         break;
     }
     case 0x9486: {
-        //*************ILI9486��ʼ��**********//
+        //*************ILI9486**********//
         LCD_WR_REG(0XF1);
         LCD_WR_DATA(0x36);
         LCD_WR_DATA(0x04);
@@ -559,7 +553,7 @@ void LCD_Init(void)
         break;
     }
     case 0x9488: {
-        //************* ILI9488��ʼ��**********//
+        //************* ILI9488**********//
         LCD_WR_REG(0XF7);
         LCD_WR_DATA(0xA9);
         LCD_WR_DATA(0x51);
@@ -633,7 +627,7 @@ void LCD_Init(void)
         break;
     }
     case 0x7796: {
-        //************* ST7796S��ʼ��**********//
+        //************* ST7796S**********//
         LCD_WR_REG(0xF0);
         LCD_WR_DATA(0xC3);
         LCD_WR_REG(0xF0);
@@ -719,7 +713,7 @@ void LCD_Init(void)
     }
     case 0x7793:
     case 0xB509: {
-        //************* R61509V��7793��ʼ��**********//
+        //************* R61509V7793**********//
         LCD_WriteReg(0x0000, 0x0000);
         LCD_WriteReg(0x0000, 0x0000);
         LCD_WriteReg(0x0000, 0x0000);
@@ -762,7 +756,7 @@ void LCD_Init(void)
         LCD_WriteReg(0x0500, 0x0000);
         LCD_WriteReg(0x0501, 0x0000);
         LCD_WriteReg(0x0502, 0x005F);
-        LCD_WriteReg(0x0401, 0x0001); // R401H Bit0 REVλ������ȡ������
+        LCD_WriteReg(0x0401, 0x0001); // R401H Bit0
         LCD_WriteReg(0x0404, 0x0000);
         delay_ms(50);
         LCD_WriteReg(0x0007, 0x0100); // BASEE
@@ -775,7 +769,7 @@ void LCD_Init(void)
         break;
     }
     case 0x5310: {
-        //************* NT35310��ʼ�� **********//
+        //************* NT35310**********//
         LCD_WR_REG(0xED);
         LCD_WR_DATA(0x01);
         LCD_WR_DATA(0xFE);
@@ -2225,7 +2219,7 @@ void LCD_Init(void)
         LCD_WR_REG(0x3600);
         LCD_WR_DATA(0x00);
         LCD_WR_REG(0x3a00);
-        LCD_WR_DATA(0x55); ////55=16?/////66=18?
+        LCD_WR_DATA(0x55);
         LCD_WR_REG(0x1100);
         delay_ms(120);
         LCD_WR_REG(0x2900);
@@ -2236,11 +2230,11 @@ void LCD_Init(void)
     }
     case 0x1963: {
         //************* SSD1963��ʼ��**********//
-        LCD_WR_REG(0xE2);  // Set PLL with OSC = 10MHz (hardware),	Multiplier N = 35, 250MHz < VCO < 800MHz =
-                           // OSC*(N+1), VCO = 300MHz
-        LCD_WR_DATA(0x1D); //����1
-        LCD_WR_DATA(0x02); //����2 Divider M = 2, PLL = 300/(M+1) = 100MHz
-        LCD_WR_DATA(0x04); //����3 Validate M and N values
+        LCD_WR_REG(0xE2);
+        // OSC*(N+1), VCO = 300MHz
+        LCD_WR_DATA(0x1D);
+        LCD_WR_DATA(0x02); // Divider M = 2, PLL = 300/(M+1) = 100MHz
+        LCD_WR_DATA(0x04); // Validate M and N values
         delay_us(100);
         LCD_WR_REG(0xE0);  // Start PLL command
         LCD_WR_DATA(0x01); // enable PLL
@@ -2248,20 +2242,20 @@ void LCD_Init(void)
         LCD_WR_REG(0xE0);  // Start PLL command again
         LCD_WR_DATA(0x03); // now, use PLL output as system clock
         delay_ms(12);
-        LCD_WR_REG(0x01); //����λ
+        LCD_WR_REG(0x01);
         delay_ms(10);
-        LCD_WR_REG(0xE6); //��������Ƶ��,33Mhz
+        LCD_WR_REG(0xE6); // 33Mhz
         LCD_WR_DATA(0x2F);
         LCD_WR_DATA(0xFF);
         LCD_WR_DATA(0xFF);
-        LCD_WR_REG(0xB0);                           //����LCDģʽ
-        LCD_WR_DATA(0x20);                          // 24λģʽ
-        LCD_WR_DATA(0x00);                          // TFT ģʽ
-        LCD_WR_DATA((SSD_HOR_RESOLUTION - 1) >> 8); //����LCDˮƽ����
+        LCD_WR_REG(0xB0);
+        LCD_WR_DATA(0x20);
+        LCD_WR_DATA(0x00);
+        LCD_WR_DATA((SSD_HOR_RESOLUTION - 1) >> 8);
         LCD_WR_DATA(SSD_HOR_RESOLUTION - 1);
-        LCD_WR_DATA((SSD_VER_RESOLUTION - 1) >> 8); //����LCD��ֱ����
+        LCD_WR_DATA((SSD_VER_RESOLUTION - 1) >> 8);
         LCD_WR_DATA(SSD_VER_RESOLUTION - 1);
-        LCD_WR_DATA(0x00); // RGB����
+        LCD_WR_DATA(0x00); // RGB
         LCD_WR_REG(0xB4);  // Set horizontal period
         LCD_WR_DATA((SSD_HT - 1) >> 8);
         LCD_WR_DATA(SSD_HT - 1);
@@ -2279,25 +2273,24 @@ void LCD_Init(void)
         LCD_WR_DATA(SSD_VER_FRONT_PORCH - 1);
         LCD_WR_DATA(0x00);
         LCD_WR_DATA(0x00);
-        LCD_WR_REG(0xF0);  //����SSD1963��CPU�ӿ�Ϊ16bit
+        LCD_WR_REG(0xF0);  // SSD1963CPU16bit
         LCD_WR_DATA(0x03); // 16-bit(565 format) data for 16bpp
-        LCD_WR_REG(0x29);  //������ʾ
-        //����PWM���  ����ͨ��ռ�ձȿɵ�
-        LCD_WR_REG(0xD0);  //�����Զ���ƽ��DBC
+        LCD_WR_REG(0x29);
+        LCD_WR_REG(0xD0);
         LCD_WR_DATA(0x00); // disable
-        LCD_WR_REG(0xBE);  //����PWM���
-        LCD_WR_DATA(0x05); // 1����PWMƵ��
-        LCD_WR_DATA(0xFE); // 2����PWMռ�ձ�
-        LCD_WR_DATA(0x01); // 3����C
-        LCD_WR_DATA(0x00); // 4����D
-        LCD_WR_DATA(0x00); // 5����E
-        LCD_WR_DATA(0x00); // 6����F
-        LCD_WR_REG(0xB8);  //����GPIO����
-        LCD_WR_DATA(0x03); // 2��IO�����ó����
-        LCD_WR_DATA(0x01); // GPIOʹ��������IO����
+        LCD_WR_REG(0xBE);
+        LCD_WR_DATA(0x05);
+        LCD_WR_DATA(0xFE);
+        LCD_WR_DATA(0x01);
+        LCD_WR_DATA(0x00);
+        LCD_WR_DATA(0x00);
+        LCD_WR_DATA(0x00);
+        LCD_WR_REG(0xB8);
+        LCD_WR_DATA(0x03);
+        LCD_WR_DATA(0x01);
         LCD_WR_REG(0xBA);
-        LCD_WR_DATA(0X01);         // GPIO[1:0]=01,����LCD����
-        LCD_PWM_BackLightSet(100); // PWM���ñ���Ϊ����
+        LCD_WR_DATA(0X01); // GPIO[1:0]=01,
+        LCD_PWM_BackLightSet(100);
         lcddev.LCD_W = 480;
         lcddev.LCD_H = 800;
         break;
@@ -2307,9 +2300,9 @@ void LCD_Init(void)
         break;
     }
     }
-    LCD_direction(USE_HORIZONTAL); //����LCD��ʾ����
-    LCD_LED = 1;                   //��������
-    LCD_Clear(WHITE);              //��ȫ����ɫ
+    LCD_direction(USE_HORIZONTAL);
+    LCD_LED = 1;
+    LCD_Clear(WHITE);
 }
 
 /*****************************************************************************
@@ -2370,7 +2363,7 @@ void LCD_SetWindows(u16 xStar, u16 yStar, u16 xEnd, u16 yEnd)
         LCD_WriteReg(0x213, yEnd);
         LCD_WriteReg(lcddev.setxcmd, x);
         LCD_WriteReg(lcddev.setycmd, y);
-        LCD_WriteRAM_Prepare(); //��ʼд��GRAM
+        LCD_WriteRAM_Prepare();
         return;
     }
     else if (lcddev.id == 0x5510)
@@ -2391,7 +2384,7 @@ void LCD_SetWindows(u16 xStar, u16 yStar, u16 xEnd, u16 yEnd)
         LCD_WR_DATA(yEnd >> 8);
         LCD_WR_REG(lcddev.setycmd + 3);
         LCD_WR_DATA(yEnd & 0XFF);
-        LCD_WriteRAM_Prepare(); //��ʼд��GRAM
+        LCD_WriteRAM_Prepare();
         return;
     }
     else if (lcddev.id == 0x1963)
@@ -2440,7 +2433,7 @@ void LCD_SetWindows(u16 xStar, u16 yStar, u16 xEnd, u16 yEnd)
     LCD_WR_DATA(yEnd >> 8);
     LCD_WR_DATA(0x00FF & yEnd);
 
-    LCD_WriteRAM_Prepare(); //��ʼд��GRAM
+    LCD_WriteRAM_Prepare();
 }
 
 /*****************************************************************************
@@ -2470,7 +2463,7 @@ void LCD_direction(u8 direction)
 {
     u16 dir_value[4] = {0};
     lcddev.dir = direction % 4;
-    if (lcddev.dir % 2) //�������Ⱥ͸߶Ȼ���
+    if (lcddev.dir % 2)
     {
         lcddev.width = lcddev.LCD_H;
         lcddev.height = lcddev.LCD_W;
@@ -2631,8 +2624,8 @@ u16 LCD_Read_ID(void)
     LCD_WR_REG(0xF004);
     LCD_WR_DATA(0x01);
 
-    LCD_ReadReg(0xC500, &val[1], 1); //����0X55
-    LCD_ReadReg(0xC501, &val[2], 1); //����0X10
+    LCD_ReadReg(0xC500, &val[1], 1);
+    LCD_ReadReg(0xC501, &val[2], 1);
     val[0] = (val[1] << 8) | val[2];
     if (val[0] == 0x5510)
     {

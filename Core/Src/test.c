@@ -1,7 +1,7 @@
 #include "test.h"
 
 //========================variable==========================//
-u16 ColorTab[5] = {RED, GREEN, BLUE, YELLOW, BRED}; //������ɫ����
+u16 ColorTab[5] = {RED, GREEN, BLUE, YELLOW, BRED};
 u16 ColornTab[8] = {RED, MAGENTA, GREEN, DARKBLUE, BLUE, BLACK, LIGHTGREEN};
 //=====================end of variable======================//
 
@@ -182,7 +182,7 @@ void Show_Picture(void)
     POINT_COLOR = RED;
     while (f_opendir(&picdir, "0:/PICTURE"))
     {
-        Show_Str(lcddev.width / 2 - 72, 145, lcddev.width, 16, "PICTURE�ļ��д���!", 16, 1);
+        Show_Str(lcddev.width / 2 - 72, 145, lcddev.width, 16, "PICTURE!", 16, 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 72, 145, lcddev.width / 2 + 72, 161, WHITE);
         delay_ms(200);
@@ -190,7 +190,7 @@ void Show_Picture(void)
     totpicnum = pic_get_tnum("0:/PICTURE");
     while (totpicnum == NULL)
     {
-        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, "û��ͼƬ�ļ�!", 16, 1);
+        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, "!", 16, 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 52, 145, lcddev.width / 2 + 52, 161, WHITE);
         delay_ms(200);
@@ -201,7 +201,7 @@ void Show_Picture(void)
     picindextbl = mymalloc(SRAMIN, 2 * totpicnum);
     while (picfileinfo.lfname == NULL || pname == NULL || picindextbl == NULL)
     {
-        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, "�ڴ����ʧ��!", 16, 1);
+        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, "!", 16, 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 52, 145, lcddev.width / 2 + 52, 161, WHITE);
         delay_ms(200);
@@ -227,7 +227,7 @@ void Show_Picture(void)
         }
     }
     POINT_COLOR = BLUE;
-    Show_Str(lcddev.width / 2 - 44, 145, lcddev.width, 16, "��ʼ��ʾ...", 16, 1);
+    Show_Str(lcddev.width / 2 - 44, 145, lcddev.width, 16, "...", 16, 1);
     delay_ms(1500);
     delay_ms(500);
     piclib_init();

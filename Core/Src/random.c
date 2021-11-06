@@ -1,5 +1,4 @@
 #include "random.h"
-#include "delay.h"
 
 // initialization
 u8 RNG_Init(void)

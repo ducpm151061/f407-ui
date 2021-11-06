@@ -24,7 +24,7 @@ void AT45DBXX_Read_ID(u8 *IData)
     u8 i;
     AT45DBXX_BUSY();
     AT45DBXX_Enable;
-    SPI2_Send_byte(Read_ID); //ִ�ж�ȡid����
+    SPI2_Send_byte(Read_ID);
     for (i = 0; i < 4; i++)
     {
         IData[i] = SPI2_Receive_byte();

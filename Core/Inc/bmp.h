@@ -5,7 +5,7 @@
 #define BMP_USE_MALLOC 1
 #define BMP_DBUF_SIZE 2048
 
-typedef __PACKED struct
+typedef struct __attribute__((packed))
 {
     u32 biSize;
     long biWidth;
@@ -20,7 +20,7 @@ typedef __PACKED struct
     u32 biClrImportant;
 } BITMAPINFOHEADER;
 
-typedef __PACKED struct
+typedef struct __attribute__((packed))
 {
     u16 bfType;
     u32 bfSize;
@@ -29,14 +29,14 @@ typedef __PACKED struct
     u32 bfOffBits;
 } BITMAPFILEHEADER;
 
-typedef __PACKED struct
+typedef struct __attribute__((packed))
 {
     u8 rgbBlue;
     u8 rgbGreen;
     u8 rgbRed;
     u8 rgbReserved;
 } RGBQUAD;
-typedef __PACKED struct
+typedef struct __attribute__((packed))
 {
     BITMAPFILEHEADER bmfHeader;
     BITMAPINFOHEADER bmiHeader;
