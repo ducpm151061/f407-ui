@@ -64,6 +64,7 @@ MEMORY
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
 CCMRAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 64K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 1024K
+MALLOC(rw)     : ORIGIN = 0x68000000, LENGTH = 512K
 }
 
 /* Define output sections */
@@ -193,7 +194,16 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
-  
+  .malloc :
+  {
+    . = ALIGN(4);
+    __MALLOC_SYMBOLS = .;       /* create a global symbol at ccmram start */
+    *(.malloc)
+    *(.malloc*)
+    
+    . = ALIGN(4);
+    __EMALLOC_SYMBOLS = .;       /* create a global symbol at ccmram end */
+  } >MALLOC AT> FLASH
 
   /* Remove information from the standard libraries */
   /DISCARD/ :

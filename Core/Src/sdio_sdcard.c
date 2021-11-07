@@ -1349,7 +1349,7 @@ SD_Error CmdResp3Error(void)
 SD_Error CmdResp2Error(void)
 {
     SD_Error errorstatus = SD_OK;
-    u32 status;
+    u32 status = 0;
     u32 timeout = SDIO_CMD0TIMEOUT;
     while (timeout--)
     {
@@ -1392,7 +1392,7 @@ SD_Error CmdResp6Error(u8 cmd, u16 *prca)
         SDIO_ClearFlag(SDIO_FLAG_CCRCFAIL);
         return SD_CMD_CRC_FAIL;
     }
-    if (SDIO->RESPCMD != cmd) 
+    if (SDIO->RESPCMD != cmd)
     {
         return SD_ILLEGAL_CMD;
     }
