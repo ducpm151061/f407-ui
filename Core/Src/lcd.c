@@ -2317,7 +2317,7 @@ void LCD_Init(void)
 ******************************************************************************/
 void LCD_SetWindows(u16 xStar, u16 yStar, u16 xEnd, u16 yEnd)
 {
-    u16 x, y, tmp;
+    u16 x = 0, y = 0, tmp = 0;
     if ((lcddev.id == 0xB509) || (lcddev.id == 0x7793))
     {
         switch (lcddev.dir)

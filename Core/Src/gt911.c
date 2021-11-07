@@ -69,16 +69,16 @@ void GT911_gpio_init(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC, ENABLE); //ʹ��PORTB,Cʱ��
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;          // PB1 ����
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;       //����ģʽ
-    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;     //�������
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; // 100MHz
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;       //����
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13; // PF11 �������
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
 #if SCAN_TYPE
@@ -102,9 +102,9 @@ u8 GT9XX_WriteHandle(u16 addr)
     u8 status;
 
     CTP_IIC_Start();
-    CTP_IIC_Send_Byte(GT9XX_IIC_WADDR); //д����ָ��
+    CTP_IIC_Send_Byte(GT9XX_IIC_WADDR);
     CTP_IIC_Wait_Ack();
-    CTP_IIC_Send_Byte((u8)(addr >> 8)); //д��16λ��ַ
+    CTP_IIC_Send_Byte((u8)(addr >> 8));
     CTP_IIC_Wait_Ack();
     CTP_IIC_Send_Byte((u8)addr);
     CTP_IIC_Wait_Ack();
@@ -203,7 +203,7 @@ u8 Touch_Get_Count(void)
     return (count[0] & 0x0f);
 }
 
-const u16 TPX[] = {0x8150, 0x8158, 0x8160, 0x8168, 0x8170}; //���������������ݵ�ַ��1~5��
+const u16 TPX[] = {0x8150, 0x8158, 0x8160, 0x8168, 0x8170};
 
 /*****************************************************************************
  * @name       :u8 GT911_Scan(void)
@@ -222,9 +222,9 @@ u8 GT911_Scan(void)
 #if SCAN_TYPE
     if (touch_flag)
 #else
-    static u8 t = 0; //���Ʋ�ѯ���,�Ӷ�����CPUռ����
+    static u8 t = 0;
     t++;
-    if ((t % 10) == 0 || t < 10) //����ʱ,ÿ����10��CTP_Scan�����ż��1��,�Ӷ���ʡCPUʹ����
+    if ((t % 10) == 0 || t < 10)
 #endif
     {
         GT9XX_ReadData(GT9XX_READ_ADDR, 42, buf);
@@ -263,33 +263,32 @@ u8 GT911_Scan(void)
                     break;
                 }
             }
-            //			temp=0XFF<<(buf[0]&0XF);		//����ĸ���ת��Ϊ1��λ��,ƥ��tp_dev.sta����
-            tempsta = tp_dev.sta; //���浱ǰ��tp_dev.staֵ
+            //			temp=0XFF<<(buf[0]&0XF);
+            tempsta = tp_dev.sta;
             tp_dev.sta = temp | TP_PRES_DOWN | TP_CATH_PRES;
-            tp_dev.x[4] = tp_dev.x[0]; //���津��0������
+            tp_dev.x[4] = tp_dev.x[0];
             tp_dev.y[4] = tp_dev.y[0];
             // for (i = 0; i < CTP_MAX_TOUCH; i++)
             // {
-            //     if (tp_dev.sta & (1 << i)) //������Ч?
+            //     if (tp_dev.sta & (1 << i))
             //     {
             tp_dev.x[0] = ((u16)buf[3] << 8) + buf[2];
             tp_dev.y[0] = ((u16)buf[5] << 8) + buf[4];
-            // GT9XX_ReadData(TPX[i],4,buf);	//��ȡXY����ֵ
+            // GT9XX_ReadData(TPX[i],4,buf);
             //     }
             // }
             res = 1;
-            if (tp_dev.x[0] > lcddev.width || tp_dev.y[0] > lcddev.height) //�Ƿ�����(���곬����)
+            if (tp_dev.x[0] > lcddev.width || tp_dev.y[0] > lcddev.height)
             {
-                if ((buf[0] & 0XF) >
-                    1) //��������������,�򸴵ڶ�����������ݵ���һ������.
+                if ((buf[0] & 0XF) > 1)
                 {
                     tp_dev.x[0] = tp_dev.x[1];
                     tp_dev.y[0] = tp_dev.y[1];
 #if !SCAN_TYPE
-                    t = 0; //����һ��,��������������10��,�Ӷ����������
+                    t = 0;
 #endif
                 }
-                else //�Ƿ�����,����Դ˴�����(��ԭԭ����)
+                else
                 {
                     tp_dev.x[0] = tp_dev.x[4];
                     tp_dev.y[0] = tp_dev.y[4];
@@ -299,29 +298,29 @@ u8 GT911_Scan(void)
             }
 #if !SCAN_TYPE
             else
-                t = 0; //����һ��,��������������10��,�Ӷ����������
+                t = 0;
 #endif
         }
     }
-    if ((buf[0] & 0X8F) == 0X80) //�޴����㰴��
+    if ((buf[0] & 0X8F) == 0X80)
     {
 #if SCAN_TYPE
         touch_flag = 0;
 #endif
-        if (tp_dev.sta & TP_PRES_DOWN) //֮ǰ�Ǳ����µ�
+        if (tp_dev.sta & TP_PRES_DOWN)
         {
-            tp_dev.sta &= ~(1 << 7); //��ǰ����ɿ�
+            tp_dev.sta &= ~(1 << 7);
         }
-        else //֮ǰ��û�б�����
+        else
         {
             tp_dev.x[0] = 0xffff;
             tp_dev.y[0] = 0xffff;
-            tp_dev.sta &= 0XE0; //�������Ч���
+            tp_dev.sta &= 0XE0;
         }
     }
 #if !SCAN_TYPE
     if (t > 240)
-        t = 10; //���´�10��ʼ����
+        t = 10;
 #endif
     return res;
 }

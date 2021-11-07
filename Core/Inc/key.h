@@ -1,6 +1,6 @@
 #ifndef __KEY_H
 #define __KEY_H
-#include "sys.h"
+#include "delay.h"
 
 #define KEY_IO_DEF 0
 

@@ -381,11 +381,11 @@ void RTP_Adjust(void)
     POINT_COLOR = RED;
     LCD_Clear(WHITE);
     POINT_COLOR = BLACK;
-    LCD_ShowString(10, 40, 16, "Please use the stylus click", 1);
-    LCD_ShowString(10, 56, 16, "the cross on the screen.", 1);
-    LCD_ShowString(10, 72, 16, "The cross will always move", 1);
-    LCD_ShowString(10, 88, 16, "until the screen adjustment", 1);
-    LCD_ShowString(10, 104, 16, "is completed.", 1);
+    LCD_ShowString(10, 40, 16, (char *)"Please use the stylus click", 1);
+    LCD_ShowString(10, 56, 16, (char *)"the cross on the screen.", 1);
+    LCD_ShowString(10, 72, 16, (char *)"The cross will always move", 1);
+    LCD_ShowString(10, 88, 16, (char *)"until the screen adjustment", 1);
+    LCD_ShowString(10, 104, 16, (char *)"is completed.", 1);
 
     RTP_Drow_Touch_Point(20, 20, RED);
     tp_dev.sta = 0;
@@ -412,8 +412,8 @@ void RTP_Adjust(void)
                 RTP_Drow_Touch_Point(20, lcddev.height - 20, RED);
                 break;
             case 3:
-                RTP_Drow_Touch_Point(20, lcddev.height - 20, WHITE);              //�����3
-                RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, RED); //����4
+                RTP_Drow_Touch_Point(20, lcddev.height - 20, WHITE);              
+                RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, RED); 
                 break;
             case 4:
 

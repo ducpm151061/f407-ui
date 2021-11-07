@@ -1,6 +1,6 @@
 #ifndef __FT5426_H
 #define __FT5426_H
-#include "sys.h"
+#include "delay.h"
 
 #define FT_RST PCout(13)
 

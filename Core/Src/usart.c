@@ -2,6 +2,7 @@
 #include "stdarg.h"
 #include "sys.h"
 #include <errno.h>
+#include <stdio.h>
 #include <unistd.h>
 #define DEBUG_UART USART1
 

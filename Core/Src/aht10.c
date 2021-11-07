@@ -154,7 +154,7 @@ void AHT_Measure(void)
 
 void ATH_Read(int32_t *temperature, int32_t *humidity)
 {
-    u8 i;
+    volatile u8 i;
     u32 temp = 0, hum = 0;
     u8 value[5];
     AHT_IIC_Start();
@@ -195,5 +195,5 @@ void AHT_Reset(void)
     AHT_IIC_Send_Byte(AHTX0_CMD_SOFTRESET);
     AHT_IIC_Wait_Ack();
 
-    I2C_Stop();
+    AHT_IIC_Stop();
 }

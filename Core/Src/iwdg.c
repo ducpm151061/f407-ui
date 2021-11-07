@@ -11,11 +11,11 @@
 ******************************************************************************/
 void IWDG_Init(u8 prer, u16 rlr)
 {
-    IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable); //ʹ�ܶ�IWDG->PR IWDG->RLR��д
-    IWDG_SetPrescaler(prer); //����IWDG��Ƶϵ��,��Ƶ����=4*2^prer.�����ֵֻ����256!
-    IWDG_SetReload(rlr);  //����IWDGװ��ֵ
-    IWDG_ReloadCounter(); // reload
-    IWDG_Enable();        //ʹ�ܿ��Ź�
+    IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+    IWDG_SetPrescaler(prer);
+    IWDG_SetReload(rlr);
+    IWDG_ReloadCounter();
+    IWDG_Enable();
 }
 
 /*****************************************************************************

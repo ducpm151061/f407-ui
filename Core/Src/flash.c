@@ -61,30 +61,25 @@ uint16_t FLASH_GetFlashSector(u32 addr)
 ******************************************************************************/
 void FLASH_Write(u32 WriteAddr, u32 *pBuffer, u32 NumToWrite)
 {
-    //�ر�ע��:
-    //         ��ΪSTM32F4������ʵ��̫��,û�취���ر�����������,���Ա�����
-    //         д��ַ�����0XFF,��ô���Ȳ������������Ҳ�������������.����
-    //         д��0XFF�ĵ�ַ,�����������������ݶ�ʧ.����д֮ǰȷ��������
-    //         û����Ҫ����,��������������Ȳ�����,Ȼ����������д.
     FLASH_Status status = FLASH_COMPLETE;
     u32 addrx = 0;
     u32 endaddr = 0;
     if (WriteAddr < INNER_FLASH_BASE || WriteAddr % 4)
-        return;                  //�Ƿ���ַ
-    FLASH_Unlock();              //����
-    FLASH_DataCacheCmd(DISABLE); // FLASH�����ڼ�,�����ֹ���ݻ���
+        return;
+    FLASH_Unlock();
+    FLASH_DataCacheCmd(DISABLE);
 
-    addrx = WriteAddr;                    //д�����ʼ��ַ
-    endaddr = WriteAddr + NumToWrite * 4; //д��Ľ�����ַ
-    if (addrx < 0X1FFF0000)               //ֻ�����洢��,����Ҫִ�в�������!!
+    addrx = WriteAddr;
+    endaddr = WriteAddr + NumToWrite * 4;
+    if (addrx < 0X1FFF0000)
     {
-        while (addrx < endaddr) //ɨ��һ���ϰ�.(�Է�FFFFFFFF�ĵط�,�Ȳ���)
+        while (addrx < endaddr)
         {
-            if (FLASH_ReadWord(addrx) != 0XFFFFFFFF) //�з�0XFFFFFFFF�ĵط�,Ҫ�����������
+            if (FLASH_ReadWord(addrx) != 0XFFFFFFFF)
             {
-                status = FLASH_EraseSector(FLASH_GetFlashSector(addrx), VoltageRange_3); // VCC=2.7~3.6V֮��!!
+                status = FLASH_EraseSector(FLASH_GetFlashSector(addrx), VoltageRange_3);
                 if (status != FLASH_COMPLETE)
-                    break; //����������
+                    break;
             }
             else
                 addrx += 4;
@@ -92,18 +87,18 @@ void FLASH_Write(u32 WriteAddr, u32 *pBuffer, u32 NumToWrite)
     }
     if (status == FLASH_COMPLETE)
     {
-        while (WriteAddr < endaddr) //д����
+        while (WriteAddr < endaddr)
         {
-            if (FLASH_ProgramWord(WriteAddr, *pBuffer) != FLASH_COMPLETE) //д������
+            if (FLASH_ProgramWord(WriteAddr, *pBuffer) != FLASH_COMPLETE)
             {
-                break; //д���쳣
+                break;
             }
             WriteAddr += 4;
             pBuffer++;
         }
     }
-    FLASH_DataCacheCmd(ENABLE); // FLASH��������,�������ݻ���
-    FLASH_Lock();               //����
+    FLASH_DataCacheCmd(ENABLE);
+    FLASH_Lock();
 }
 
 /*****************************************************************************
@@ -120,7 +115,7 @@ void FLASH_Read(u32 ReadAddr, u32 *pBuffer, u32 NumToRead)
     u32 i;
     for (i = 0; i < NumToRead; i++)
     {
-        pBuffer[i] = FLASH_ReadWord(ReadAddr); //��ȡ4���ֽ�.
-        ReadAddr += 4;                         //ƫ��4���ֽ�.
+        pBuffer[i] = FLASH_ReadWord(ReadAddr);
+        ReadAddr += 4;
     }
 }

@@ -4,7 +4,7 @@
 #include "string.h"
 #include "usart.h"
 
-const u8 *FILE_TYPE_TBL[6][13] = {
+const char *FILE_TYPE_TBL[6][13] = {
     {"BIN"},
     {"LRC"},
     {"NES"},

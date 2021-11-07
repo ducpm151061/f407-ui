@@ -15,9 +15,8 @@ const u32 memtblsize[SRAMBANK] = {MEM1_ALLOC_TABLE_SIZE, MEM2_ALLOC_TABLE_SIZE, 
 const u32 memblksize[SRAMBANK] = {MEM1_BLOCK_SIZE, MEM2_BLOCK_SIZE, MEM3_BLOCK_SIZE};
 const u32 memsize[SRAMBANK] = {MEM1_MAX_SIZE, MEM2_MAX_SIZE, MEM3_MAX_SIZE};
 
-struct _m_mallco_dev mallco_dev = {
-    my_mem_init, my_mem_perused, mem1base, mem2base, mem3base, mem1mapbase, mem2mapbase, mem3mapbase, 0, 0, 0,
-};
+struct _m_mallco_dev mallco_dev = {my_mem_init, my_mem_perused, mem1base, mem2base, mem3base, mem1mapbase,
+                                   mem2mapbase, mem3mapbase,    0,        0,        0};
 
 void mymemcpy(void *des, void *src, u32 n)
 {

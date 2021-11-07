@@ -2,7 +2,6 @@
 #define __LCD_H
 #include "delay.h"
 #include "stdlib.h"
-#include "sys.h"
 #include "usart.h"
 
 typedef struct
@@ -44,29 +43,29 @@ typedef struct
 #define WHITE 0xFFFF
 #define BLACK 0x0000
 #define BLUE 0x001F
-#define BRED 0XF81F
-#define GRED 0XFFE0
-#define GBLUE 0X07FF
+#define BRED 0xF81F
+#define GRED 0xFFE0
+#define GBLUE 0x07FF
 #define RED 0xF800
 #define MAGENTA 0xF81F
 #define GREEN 0x07E0
 #define CYAN 0x7FFF
 #define YELLOW 0xFFE0
-#define BROWN 0XBC40
-#define BRRED 0XFC07
-#define GRAY 0X8430
+#define BROWN 0xBC40
+#define BRRED 0xFC07
+#define GRAY 0x8430
 
-#define DARKBLUE 0X01CF
-#define LIGHTBLUE 0X7D7C
-#define GRAYBLUE 0X5458
+#define DARKBLUE 0x01CF
+#define LIGHTBLUE 0x7D7C
+#define GRAYBLUE 0x5458
 
-#define LIGHTGREEN 0X841F
-#define LIGHTGRAY 0XEF5B
-#define LGRAY 0XC618
-#define DARKGRAY 0X8410
+#define LIGHTGREEN 0x841F
+#define LIGHTGRAY 0xEF5B
+#define LGRAY 0xC618
+#define DARKGRAY 0x8410
 
-#define LGRAYBLUE 0XA651
-#define LBBLUE 0X2B12
+#define LGRAYBLUE 0xA651
+#define LBBLUE 0x2B12
 
 void LCD_Init(void);
 u16 LCD_read(void);

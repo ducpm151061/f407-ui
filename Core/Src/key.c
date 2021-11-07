@@ -1,6 +1,4 @@
-
 #include "key.h"
-#include "delay.h"
 
 /*****************************************************************************
  * @name       :void KEY_Init(void)
@@ -36,12 +34,12 @@ void KEY_Init(void)
 ******************************************************************************/
 u8 KEY_Scan(u8 mode)
 {
-    static u8 key_up = 1; //�������ɿ���־
+    static u8 key_up = 1;
     if (mode)
-        key_up = 1; //֧������
+        key_up = 1; 
     if (key_up && (KEY0_VALUE == 0 || KEY_UP_VALUE == 1))
     {
-        delay_ms(10); //ȥ����
+        delay_ms(10);
         key_up = 0;
         if (KEY0_VALUE == 0)
         {
@@ -56,5 +54,5 @@ u8 KEY_Scan(u8 mode)
     {
         key_up = 1;
     }
-    return 0; // �ް�������
+    return 0;
 }

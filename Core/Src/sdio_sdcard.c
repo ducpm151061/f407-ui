@@ -228,7 +228,7 @@ SD_Error SD_PowerON(void)
         {
             SDIO_CmdInitStructure.SDIO_Argument = SD_VOLTAGE_WINDOW_MMC;
             SDIO_CmdInitStructure.SDIO_CmdIndex = SD_CMD_SEND_OP_COND;
-            SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short; // r3
+            SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short;
             SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;
             SDIO_CmdInitStructure.SDIO_CPSM = SDIO_CPSM_Enable;
             SDIO_SendCommand(&SDIO_CmdInitStructure);

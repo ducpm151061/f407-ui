@@ -13,7 +13,7 @@ u8 mf_mount(u8 *path, u8 mt)
 u8 mf_open(u8 *path, u8 mode)
 {
     u8 res;
-    res = f_open(file, (const TCHAR *)path, mode); //���ļ���
+    res = f_open(file, (const TCHAR *)path, mode);
     return res;
 }
 u8 mf_close(void)
@@ -224,11 +224,11 @@ void mf_getlabel(u8 *path)
     res = f_getlabel((const TCHAR *)path, (TCHAR *)buf, (DWORD *)&sn);
     if (res == FR_OK)
     {
-        printf("\r\n����%s ���̷�Ϊ:%s\r\n", path, buf);
-        printf("����%s �����к�:%X\r\n\r\n", path, sn);
+        printf("\r\n%s :%s\r\n", path, buf);
+        printf("%s :%X\r\n\r\n", path, sn);
     }
     else
-        printf("\r\n��ȡʧ�ܣ�������:%X\r\n", res);
+        printf("\r\n:%X\r\n", res);
 }
 void mf_setlabel(u8 *path)
 {
@@ -236,10 +236,10 @@ void mf_setlabel(u8 *path)
     res = f_setlabel((const TCHAR *)path);
     if (res == FR_OK)
     {
-        printf("\r\n�����̷����óɹ�:%s\r\n", path);
+        printf("\r\n:%s\r\n", path);
     }
     else
-        printf("\r\n�����̷�����ʧ�ܣ�������:%X\r\n", res);
+        printf("\r\n:%X\r\n", res);
 }
 
 void mf_gets(u16 size)

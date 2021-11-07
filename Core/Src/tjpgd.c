@@ -764,7 +764,7 @@ static JRESULT mcu_output(JDEC *jd,                                 /* Pointer t
     }
 
     /* Output the RGB rectangular */
-    return (JRESULT)outfunc(jd, jd->workbuf, &rect); //ȥ����Ŀ����,��ʡʱ��
+    return (JRESULT)outfunc(jd, jd->workbuf, &rect);
 }
 
 /*-----------------------------------------------------------------------*/
@@ -1072,163 +1072,138 @@ JRESULT jd_decomp(JDEC *jd,                                 /* Initialized decom
     return rc;
 }
 
-#if JPEG_USE_MALLOC == 1 //ʹ��malloc
+#if JPEG_USE_MALLOC == 1
 
-FIL *f_jpeg;    // JPEG�ļ�ָ��
-JDEC *jpeg_dev; //���������ṹ��ָ��
-u8 *jpg_buffer; //����jpeg���빤������С(������Ҫ3092�ֽ�)����Ϊ��ѹ������������4�ֽڶ���
+FIL *f_jpeg; // JPEG
+JDEC *jpeg_dev;
+u8 *jpg_buffer;
 
 u8 jpeg_mallocall(void)
 {
     f_jpeg = (FIL *)pic_memalloc(sizeof(FIL));
     if (f_jpeg == NULL)
-        return PIC_MEM_ERR; //�����ڴ�ʧ��.
+        return PIC_MEM_ERR;
     jpeg_dev = (JDEC *)pic_memalloc(sizeof(JDEC));
     if (jpeg_dev == NULL)
-        return PIC_MEM_ERR; //�����ڴ�ʧ��.
+        return PIC_MEM_ERR;
     jpg_buffer = (u8 *)pic_memalloc(JPEG_WBUF_SIZE);
     if (jpg_buffer == NULL)
-        return PIC_MEM_ERR; //�����ڴ�ʧ��.
+        return PIC_MEM_ERR;
     return 0;
 }
 void jpeg_freeall(void)
 {
-    pic_memfree(f_jpeg);     //�ͷ�f_jpeg���뵽���ڴ�
-    pic_memfree(jpeg_dev);   //�ͷ�jpeg_dev���뵽���ڴ�
-    pic_memfree(jpg_buffer); //�ͷ�jpg_buffer���뵽���ڴ�
+    pic_memfree(f_jpeg);
+    pic_memfree(jpeg_dev);
+    pic_memfree(jpg_buffer);
 }
 
 #else //��ʹ��malloc
 
 FIL tf_jpeg;
 JDEC tjpeg_dev;
-FIL *f_jpeg = &tf_jpeg;                   // JPEG�ļ�ָ��
-JDEC *jpeg_dev = &tjpeg_dev;              //���������ṹ��ָ��
-__align(4) u8 jpg_buffer[JPEG_WBUF_SIZE]; //����jpeg���빤������С(������Ҫ3092�ֽ�)����Ϊ��ѹ������������4�ֽڶ���
+FIL *f_jpeg = &tf_jpeg; // JPEG
+JDEC *jpeg_dev = &tjpeg_dev;
+__align(4) u8 jpg_buffer[JPEG_WBUF_SIZE];
 
 #endif
 
-// jpeg��������ص�����
-// jd:���������Ķ�����Ϣ�Ľṹ��
-// buf:�������ݻ����� (NULL:ִ�е�ַƫ��)
-// num:��Ҫ������������������������/��ַƫ����
-//����ֵ:��ȡ�����ֽ���/��ַƫ����
 u32 jpeg_in_func(JDEC *jd, u8 *buf, u32 num)
 {
-    u32 rb; //��ȡ�����ֽ���
-    FIL *dev = (FIL *)jd->device; //��������ļ�����Ϣ��ʹ��FATFS�е�FIL�ṹ���ͽ��ж���
-    if (buf) //��ȡ������Ч����ʼ��ȡ����
+    u32 rb;
+    FIL *dev = (FIL *)jd->device;
+    if (buf)
     {
-        f_read(dev, buf, num, &rb); //����FATFS��f_read���������ڰ�jpeg�ļ������ݶ�ȡ����
-        return rb; //���ض�ȡ�����ֽ���Ŀ
+        f_read(dev, buf, num, &rb);
+        return rb;
     }
     else
-        return (f_lseek(dev, f_tell(dev) + num) == FR_OK) ? num : 0; //���¶�λ���ݵ㣬�൱��ɾ��֮ǰ��n�ֽ�����
+        return (f_lseek(dev, f_tell(dev) + num) == FR_OK) ? num : 0;
 }
-//�������ķ�ʽ����ͼƬ������ʾ
-// jd:���������Ķ�����Ϣ�Ľṹ��
-// rgbbuf:ָ��ȴ������RGBλͼ���ݵ�ָ��
-// rect:�ȴ�����ľ���ͼ��Ĳ���
-//����ֵ:0,����ɹ�;1,���ʧ��/�������
 u32 jpeg_out_func_fill(JDEC *jd, void *rgbbuf, JRECT *rect)
 {
     u16 *pencolor = (u16 *)rgbbuf;
-    u16 width = rect->right - rect->left + 1;  //���Ŀ���
-    u16 height = rect->bottom - rect->top + 1; //���ĸ߶�
-    pic_phy.fillcolor(rect->left + picinfo.S_XOFF, rect->top + picinfo.S_YOFF, width, height, pencolor); //��ɫ���
-    return 0; //����0,ʹ�ý��빤������ִ��
+    u16 width = rect->right - rect->left + 1;
+    u16 height = rect->bottom - rect->top + 1;
+    pic_phy.fillcolor(rect->left + picinfo.S_XOFF, rect->top + picinfo.S_YOFF, width, height, pencolor);
+    return 0;
 }
-//���û���ķ�ʽ����ͼƬ������ʾ
-// jd:���������Ķ�����Ϣ�Ľṹ��
-// rgbbuf:ָ��ȴ������RGBλͼ���ݵ�ָ��
-// rect:�ȴ�����ľ���ͼ��Ĳ���
-//����ֵ:0,����ɹ�;1,���ʧ��/�������
 u32 jpeg_out_func_point(JDEC *jd, void *rgbbuf, JRECT *rect)
 {
     u16 i, j;
     u16 realx = rect->left, realy = 0;
     u16 *pencolor = rgbbuf;
-    u16 width = rect->right - rect->left + 1;  //ͼƬ�Ŀ���
-    u16 height = rect->bottom - rect->top + 1; //ͼƬ�ĸ߶�
-    for (i = 0; i < height; i++)               // y����
+    u16 width = rect->right - rect->left + 1;
+    u16 height = rect->bottom - rect->top + 1;
+    for (i = 0; i < height; i++)
     {
-        realy = (picinfo.Div_Fac * (rect->top + i)) >> 13; //ʵ��Y����
-        //�����ﲻ�ı�picinfo.staticx��picinfo.staticy��ֵ ,���������ı�,������ÿ��ĵ�һ���㲻��ʾ!!!
-        if (!is_element_ok(realx, realy, 0)) //��ֵ�Ƿ���������? Ѱ��������������
+        realy = (picinfo.Div_Fac * (rect->top + i)) >> 13;
+        if (!is_element_ok(realx, realy, 0))
         {
             pencolor += width;
             continue;
         }
-        for (j = 0; j < width; j++) // x����
+        for (j = 0; j < width; j++)
         {
-            realx = (picinfo.Div_Fac * (rect->left + j)) >> 13; //ʵ��X����
-            //������ı�picinfo.staticx��picinfo.staticy��ֵ
-            if (!is_element_ok(realx, realy, 1)) //��ֵ�Ƿ���������? Ѱ��������������
+            realx = (picinfo.Div_Fac * (rect->left + j)) >> 13;
+            if (!is_element_ok(realx, realy, 1))
             {
                 pencolor++;
                 continue;
             }
-            pic_phy.draw_point(realx + picinfo.S_XOFF, realy + picinfo.S_YOFF, *pencolor); //��ʾͼƬ
+            pic_phy.draw_point(realx + picinfo.S_XOFF, realy + picinfo.S_YOFF, *pencolor);
             pencolor++;
         }
     }
-    return 0; //����0,ʹ�ý��빤������ִ��
+    return 0;
 }
-//����jpeg/jpg�ļ�s
-// filename:jpeg/jpg·��+�ļ���
-// fast:ʹ��СͼƬ(ͼƬ�ߴ�С�ڵ���Һ���ֱ���)���ٽ���,0,��ʹ��;1,ʹ��.
-//����ֵ:0,����ɹ�;����,����ʧ��.
 u8 jpg_decode(const u8 *filename, u8 fast)
 {
-    u8 res = 0; //����ֵ
-    u8 scale;   //ͼ��������� 0,1/2,1/4,1/8
+    u8 res = 0;
+    u8 scale;
     UINT (*outfun)(JDEC *, void *, JRECT *);
 
-#if JPEG_USE_MALLOC == 1 //ʹ��malloc
+#if JPEG_USE_MALLOC == 1
     res = jpeg_mallocall();
 #endif
     if (res == 0)
     {
-        //�õ�JPEG/JPGͼƬ�Ŀ�ʼ��Ϣ
-        res = f_open(f_jpeg, (const TCHAR *)filename, FA_READ); //���ļ�
-        if (res == FR_OK)                                       //���ļ��ɹ�
+        res = f_open(f_jpeg, (const TCHAR *)filename, FA_READ);
+        if (res == FR_OK)
         {
-            res = jd_prepare(
-                jpeg_dev, jpeg_in_func, jpg_buffer, JPEG_WBUF_SIZE,
-                f_jpeg); //ִ�н����׼������������TjpgDecģ���jd_prepare����
-            outfun = jpeg_out_func_point; //Ĭ�ϲ��û���ķ�ʽ��ʾ
-            if (res == JDR_OK)            //׼������ɹ�
+            res = jd_prepare(jpeg_dev, jpeg_in_func, jpg_buffer, JPEG_WBUF_SIZE, f_jpeg);
+            outfun = jpeg_out_func_point;
+            if (res == JDR_OK)
             {
-                for (scale = 0; scale < 4; scale++) //ȷ�����ͼ��ı�������
+                for (scale = 0; scale < 4; scale++)
                 {
                     if ((jpeg_dev->width >> scale) <= picinfo.S_Width &&
-                        (jpeg_dev->height >> scale) <= picinfo.S_Height) //��Ŀ��������
+                        (jpeg_dev->height >> scale) <= picinfo.S_Height)
                     {
                         if (((jpeg_dev->width >> scale) != picinfo.S_Width) &&
                             ((jpeg_dev->height >> scale) != picinfo.S_Height && scale))
-                            scale = 0; //��������,������
+                            scale = 0;
                         else
-                            outfun = jpeg_out_func_fill; //����ʾ�ߴ�����,���Բ������ķ�ʽ��ʾ
+                            outfun = jpeg_out_func_fill;
                         break;
                     }
                 }
                 if (scale == 4)
-                    scale = 0; //����
-                if (fast == 0) //����Ҫ���ٽ���
+                    scale = 0;
+                if (fast == 0)
                 {
-                    outfun = jpeg_out_func_point; //Ĭ�ϲ��û���ķ�ʽ��ʾ
+                    outfun = jpeg_out_func_point;
                 }
-                picinfo.ImgHeight = jpeg_dev->height >> scale; //���ź��ͼƬ�ߴ�
-                picinfo.ImgWidth = jpeg_dev->width >> scale;   //���ź��ͼƬ�ߴ�
-                ai_draw_init();                                //��ʼ�����ܻ�ͼ
-                //ִ�н��빤��������TjpgDecģ���jd_decomp����
+                picinfo.ImgHeight = jpeg_dev->height >> scale;
+                picinfo.ImgWidth = jpeg_dev->width >> scale;
+                ai_draw_init();
                 res = jd_decomp(jpeg_dev, outfun, scale);
             }
         }
-        f_close(f_jpeg); //���빤��ִ�гɹ�������0
+        f_close(f_jpeg);
     }
-#if JPEG_USE_MALLOC == 1 //ʹ��malloc
-    jpeg_freeall();      //�ͷ��ڴ�
+#if JPEG_USE_MALLOC == 1
+    jpeg_freeall();
 #endif
     return res;
 }

@@ -272,7 +272,7 @@ u8 TCS34725_Init(void)
 
     TCS34725_I2C_Init();
     TCS34725_Read(TCS34725_ID, &id, 1);
-    if (id == 0x4D | id == 0x44)
+    if (id == 0x4D || id == 0x44)
     {
         TCS34725_SetIntegrationTime(TCS34725_INTEGRATIONTIME_50MS);
         TCS34725_SetGain(TCS34725_GAIN_1X);

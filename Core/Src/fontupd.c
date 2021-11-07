@@ -13,10 +13,10 @@
 
 _font_info ftinfo;
 
-u8 *const GBK24_PATH = "/FONT/GBK24.FON";
-u8 *const GBK16_PATH = "/FONT/GBK16.FON";
-u8 *const GBK12_PATH = "/FONT/GBK12.FON";
-u8 *const UNIGBK_PATH = "/FONT/UNIGBK.BIN";
+char *const GBK24_PATH = "/FONT/GBK24.FON";
+char *const GBK16_PATH = "/FONT/GBK16.FON";
+char *const GBK12_PATH = "/FONT/GBK12.FON";
+char *const UNIGBK_PATH = "/FONT/UNIGBK.BIN";
 
 u32 fupd_prog(u16 x, u16 y, u8 size, u32 fsize, u32 pos)
 {
@@ -26,7 +26,7 @@ u32 fupd_prog(u16 x, u16 y, u8 size, u32 fsize, u32 pos)
     prog *= 100;
     if (t != prog)
     {
-        LCD_ShowString(x + 3 * size / 2, y, size, "%", 1);
+        LCD_ShowString(x + 3 * size / 2, y, size, (char *)"%", 1);
         t = prog;
         if (t > 100)
             t = 100;
@@ -114,95 +114,86 @@ u8 update_font(u16 x, u16 y, u8 size, u8 *src)
         myfree(SRAMIN, fftemp);
         myfree(SRAMIN, pname);
         myfree(SRAMIN, buf);
-        return 5; 
+        return 5;
     }
-    //�Ȳ����ļ��Ƿ�����
-    strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+    strcpy((char *)pname, (char *)src);
     strcat((char *)pname, (char *)UNIGBK_PATH);
     res = f_open(fftemp, (const TCHAR *)pname, FA_READ);
     if (res)
-        rval |= 1 << 4;                 //���ļ�ʧ��
-    strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
     strcat((char *)pname, (char *)GBK12_PATH);
     res = f_open(fftemp, (const TCHAR *)pname, FA_READ);
     if (res)
-        rval |= 1 << 5;                 //���ļ�ʧ��
-    strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
     strcat((char *)pname, (char *)GBK16_PATH);
     res = f_open(fftemp, (const TCHAR *)pname, FA_READ);
     if (res)
-        rval |= 1 << 6;                 //���ļ�ʧ��
-    strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
     strcat((char *)pname, (char *)GBK24_PATH);
     res = f_open(fftemp, (const TCHAR *)pname, FA_READ);
     if (res)
-        rval |= 1 << 7;     //���ļ�ʧ��
-    myfree(SRAMIN, fftemp); //�ͷ��ڴ�
-    if (rval == 0)          //�ֿ��ļ�������.
+        rval |= 1 << 7;
+    myfree(SRAMIN, fftemp);
+    if (rval == 0)
     {
-        LCD_ShowString(x, y, size, "Erasing sectors... ", 0); //��ʾ���ڲ�������
-        for (i = 0; i < FONTSECSIZE; i++) //�Ȳ����ֿ�����,���д���ٶ�
+        LCD_ShowString(x, y, size, "Erasing sectors... ", 0);
+        for (i = 0; i < FONTSECSIZE; i++)
         {
-            fupd_prog(x + 20 * size / 2, y, size, FONTSECSIZE, i); //������ʾ
-            W25Q64_Read((u8 *)buf, ((FONTINFOADDR / 4096) + i) * 4096, 4096); //������������������
-            for (j = 0; j < 1024; j++)                                        //У������
+            fupd_prog(x + 20 * size / 2, y, size, FONTSECSIZE, i);
+            W25Q64_Read((u8 *)buf, ((FONTINFOADDR / 4096) + i) * 4096, 4096);
+            for (j = 0; j < 1024; j++)
             {
                 if (buf[j] != 0XFFFFFFFF)
-                    break; //��Ҫ����
+                    break;
             }
             if (j != 1024)
-                W25Q64_Erase_Sector((FONTINFOADDR / 4096) + i); //��Ҫ����������
+                W25Q64_Erase_Sector((FONTINFOADDR / 4096) + i);
         }
         myfree(SRAMIN, buf);
-        LCD_ShowString(x, y, size, "Updating UNIGBK.BIN", 0);
-        strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
         strcat((char *)pname, (char *)UNIGBK_PATH);
-        res = updata_fontx(x + 20 * size / 2, y, size, pname, 0); //����UNIGBK.BIN
+        res = updata_fontx(x + 20 * size / 2, y, size, pname, 0);
         if (res)
         {
             myfree(SRAMIN, pname);
             return 1;
         }
-        LCD_ShowString(x, y, size, "Updating GBK12.BIN  ", 0);
-        strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
         strcat((char *)pname, (char *)GBK12_PATH);
-        res = updata_fontx(x + 20 * size / 2, y, size, pname, 1); //����GBK12.FON
+        res = updata_fontx(x + 20 * size / 2, y, size, pname, 1);
         if (res)
         {
             myfree(SRAMIN, pname);
             return 2;
         }
-        LCD_ShowString(x, y, size, "Updating GBK16.BIN  ", 0);
-        strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
         strcat((char *)pname, (char *)GBK16_PATH);
-        res = updata_fontx(x + 20 * size / 2, y, size, pname, 2); //����GBK16.FON
+        res = updata_fontx(x + 20 * size / 2, y, size, pname, 2);
         if (res)
         {
             myfree(SRAMIN, pname);
             return 3;
         }
-        LCD_ShowString(x, y, size, "Updating GBK24.BIN  ", 0);
-        strcpy((char *)pname, (char *)src); // copy src���ݵ�pname
+        strcpy((char *)pname, (char *)src);
         strcat((char *)pname, (char *)GBK24_PATH);
-        res = updata_fontx(x + 20 * size / 2, y, size, pname, 3); //����GBK24.FON
+        res = updata_fontx(x + 20 * size / 2, y, size, pname, 3);
         if (res)
         {
             myfree(SRAMIN, pname);
             return 4;
         }
-        //ȫ�����º���
         ftinfo.fontok = 0XAA;
-        W25Q64_Write((u8 *)&ftinfo, FONTINFOADDR, sizeof(ftinfo)); 
+        W25Q64_Write((u8 *)&ftinfo, FONTINFOADDR, sizeof(ftinfo));
     }
-    myfree(SRAMIN, pname); //�ͷ��ڴ�
+    myfree(SRAMIN, pname);
     myfree(SRAMIN, buf);
-    return rval; 
+    return rval;
 }
 u8 font_init(void)
 {
     u8 t = 0;
     W25Q64_Init();
-    while (t < 10) 
+    while (t < 10)
     {
         t++;
         W25Q64_Read((u8 *)&ftinfo, FONTINFOADDR, sizeof(ftinfo));

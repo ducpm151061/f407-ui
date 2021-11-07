@@ -1,6 +1,8 @@
 #ifndef __GIF_H__
 #define __GIF_H__
+#include "ff.h"
 #include "sys.h"
+
 
 #define GIF_USE_MALLOC 1
 

@@ -1,6 +1,6 @@
 #ifndef __CTPIIC_H
 #define __CTPIIC_H
-#include "sys.h"
+#include "delay.h"
 
 #define CTP_SDA_IN()                                                                                                   \
     {                                                                                                                  \

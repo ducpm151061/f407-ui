@@ -15,7 +15,7 @@
 ********************************************************************/
 void GUI_DrawPoint(u16 x, u16 y, u16 color)
 {
-    LCD_SetCursor(x, y); //���ù��λ��
+    LCD_SetCursor(x, y);
     Lcd_WriteData_16Bit(color);
 }
 
@@ -33,15 +33,30 @@ void GUI_DrawPoint(u16 x, u16 y, u16 color)
 void LCD_Fill(u16 sx, u16 sy, u16 ex, u16 ey, u16 color)
 {
     u16 i, j;
-    u16 width = ex - sx + 1;        //�õ����Ŀ���
-    u16 height = ey - sy + 1;       //�߶�
-    LCD_SetWindows(sx, sy, ex, ey); //������ʾ����
+    u16 width = ex - sx + 1;
+    u16 height = ey - sy + 1;
+    LCD_SetWindows(sx, sy, ex, ey);
     for (i = 0; i < height; i++)
     {
         for (j = 0; j < width; j++)
-            Lcd_WriteData_16Bit(color); //д������
+            Lcd_WriteData_16Bit(color);
     }
-    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1); //�ָ���������Ϊȫ��
+    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1);
+}
+
+void LCD_Fill_Colors(u16 sx, u16 sy, u16 ex, u16 ey, u16 *colors)
+{
+    u16 i, j;
+    u16 width = ex - sx + 1;
+    u16 height = ey - sy + 1;
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            LCD_SetCursor(sx + j, sy + i);
+            Lcd_WriteData_16Bit(colors[i * width + j]);
+        }
+    }
 }
 
 /*******************************************************************
@@ -60,14 +75,14 @@ void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)
     int xerr = 0, yerr = 0, delta_x, delta_y, distance;
     int incx, incy, uRow, uCol;
 
-    delta_x = x2 - x1; //������������
+    delta_x = x2 - x1;
     delta_y = y2 - y1;
     uRow = x1;
     uCol = y1;
     if (delta_x > 0)
-        incx = 1; //���õ�������
+        incx = 1;
     else if (delta_x == 0)
-        incx = 0; //��ֱ��
+        incx = 0;
     else
     {
         incx = -1;
@@ -76,19 +91,19 @@ void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)
     if (delta_y > 0)
         incy = 1;
     else if (delta_y == 0)
-        incy = 0; //ˮƽ��
+        incy = 0;
     else
     {
         incy = -1;
         delta_y = -delta_y;
     }
     if (delta_x > delta_y)
-        distance = delta_x; //ѡȡ��������������
+        distance = delta_x;
     else
         distance = delta_y;
-    for (t = 0; t <= distance + 1; t++) //�������
+    for (t = 0; t <= distance + 1; t++)
     {
-        LCD_DrawPoint(uRow, uCol); //����
+        LCD_DrawPoint(uRow, uCol);
         xerr += delta_x;
         yerr += delta_y;
         if (xerr > distance)
@@ -125,14 +140,14 @@ void LCD_DrawLine2(u16 x1, u16 y1, u16 x2, u16 y2, u16 size, u16 color)
     {
         return;
     }
-    delta_x = x2 - x1; //������������
+    delta_x = x2 - x1;
     delta_y = y2 - y1;
     uRow = x1;
     uCol = y1;
     if (delta_x > 0)
-        incx = 1; //���õ�������
+        incx = 1;
     else if (delta_x == 0)
-        incx = 0; //��ֱ��
+        incx = 0;
     else
     {
         incx = -1;
@@ -141,20 +156,20 @@ void LCD_DrawLine2(u16 x1, u16 y1, u16 x2, u16 y2, u16 size, u16 color)
     if (delta_y > 0)
         incy = 1;
     else if (delta_y == 0)
-        incy = 0; //ˮƽ��
+        incy = 0;
     else
     {
         incy = -1;
         delta_y = -delta_y;
     }
     if (delta_x > delta_y)
-        distance = delta_x; //ѡȡ��������������
+        distance = delta_x;
     else
         distance = delta_y;
-    for (t = 0; t <= distance + 1; t++) //�������
+    for (t = 0; t <= distance + 1; t++)
     {
         gui_circle(uRow, uCol, color, size, 1);
-        // LCD_DrawPoint(uRow,uCol);//����
+        // LCD_DrawPoint(uRow,uCol);
         xerr += delta_x;
         yerr += delta_y;
         if (xerr > distance)
@@ -251,7 +266,6 @@ void gui_circle(int xc, int yc, u16 c, int r, int fill)
 
     if (fill)
     {
-        // �����䣨��ʵ��Բ��
         while (x <= y)
         {
             for (yi = x; yi <= y; yi++)
@@ -271,7 +285,6 @@ void gui_circle(int xc, int yc, u16 c, int r, int fill)
     }
     else
     {
-        // �������䣨������Բ��
         while (x <= y)
         {
             _draw_circle_8(xc, yc, x, y, c);
@@ -433,16 +446,16 @@ void LCD_ShowChar(u16 x, u16 y, u16 fc, u16 bc, u8 num, u8 size, u8 mode)
     u8 pos, t;
     u16 colortemp = POINT_COLOR;
 
-    num = num - ' ';                                      //�õ�ƫ�ƺ��ֵ
-    LCD_SetWindows(x, y, x + size / 2 - 1, y + size - 1); //���õ���������ʾ����
-    if (!mode)                                            //�ǵ��ӷ�ʽ
+    num = num - ' ';
+    LCD_SetWindows(x, y, x + size / 2 - 1, y + size - 1);
+    if (!mode)
     {
         for (pos = 0; pos < size; pos++)
         {
             if (size == 12)
-                temp = asc2_1206[num][pos]; //����1206����
+                temp = asc2_1206[num][pos];
             else
-                temp = asc2_1608[num][pos]; //����1608����
+                temp = asc2_1608[num][pos];
             for (t = 0; t < size / 2; t++)
             {
                 if (temp & 0x80)
@@ -453,25 +466,25 @@ void LCD_ShowChar(u16 x, u16 y, u16 fc, u16 bc, u8 num, u8 size, u8 mode)
             }
         }
     }
-    else //���ӷ�ʽ
+    else
     {
         for (pos = 0; pos < size; pos++)
         {
             if (size == 12)
-                temp = asc2_1206[num][pos]; //����1206����
+                temp = asc2_1206[num][pos];
             else
-                temp = asc2_1608[num][pos]; //����1608����
+                temp = asc2_1608[num][pos];
             for (t = 0; t < size / 2; t++)
             {
                 POINT_COLOR = fc;
                 if (temp & 0x80)
-                    LCD_DrawPoint(x + t, y + pos); //��һ����
+                    LCD_DrawPoint(x + t, y + pos);
                 temp <<= 1;
             }
         }
     }
     POINT_COLOR = colortemp;
-    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1); //�ָ�����Ϊȫ��
+    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1);
 }
 
 /*****************************************************************************
@@ -485,9 +498,9 @@ void LCD_ShowChar(u16 x, u16 y, u16 fc, u16 bc, u8 num, u8 size, u8 mode)
                                 mode:0-no overlying,1-overlying
  * @retvalue   :None
 ******************************************************************************/
-void LCD_ShowString(u16 x, u16 y, u8 size, u8 *p, u8 mode)
+void LCD_ShowString(u16 x, u16 y, u8 size, char *p, u8 mode)
 {
-    while ((*p <= '~') && (*p >= ' ')) //�ж��ǲ��ǷǷ��ַ�!
+    while ((*p <= '~') && (*p >= ' '))
     {
         if (x > (lcddev.width - 1) || y > (lcddev.height - 1))
             return;
@@ -565,13 +578,13 @@ void LCD_ShowNum(u16 x, u16 y, u32 num, u8 len, u8 size, u8 flag)
                                 mode:0-no overlying,1-overlying
  * @retvalue   :None
 ******************************************************************************/
-void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
+void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, char *s, u8 mode)
 {
     u8 i, j;
     u16 k;
     u16 HZnum;
     u16 x0 = x;
-    HZnum = sizeof(tfont16) / sizeof(typFNT_GB16); //�Զ�ͳ�ƺ�����Ŀ
+    HZnum = sizeof(tfont16) / sizeof(typFNT_GB16);
 
     for (k = 0; k < HZnum; k++)
     {
@@ -582,7 +595,7 @@ void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
             {
                 for (j = 0; j < 8; j++)
                 {
-                    if (!mode) //�ǵ��ӷ�ʽ
+                    if (!mode)
                     {
                         if (tfont16[k].Msk[i] & (0x80 >> j))
                             Lcd_WriteData_16Bit(fc);
@@ -593,7 +606,7 @@ void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                     {
                         POINT_COLOR = fc;
                         if (tfont16[k].Msk[i] & (0x80 >> j))
-                            LCD_DrawPoint(x, y); //��һ����
+                            LCD_DrawPoint(x, y);
                         x++;
                         if ((x - x0) == 16)
                         {
@@ -605,10 +618,10 @@ void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                 }
             }
         }
-        continue; //���ҵ���Ӧ�����ֿ������˳�����ֹ��������ظ�ȡģ����Ӱ��
+        continue;
     }
 
-    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1); //�ָ�����Ϊȫ��
+    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1);
 }
 
 /*****************************************************************************
@@ -623,13 +636,13 @@ void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                                 mode:0-no overlying,1-overlying
  * @retvalue   :None
 ******************************************************************************/
-void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
+void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, char *s, u8 mode)
 {
     u8 i, j;
     u16 k;
     u16 HZnum;
     u16 x0 = x;
-    HZnum = sizeof(tfont24) / sizeof(typFNT_GB24); //�Զ�ͳ�ƺ�����Ŀ
+    HZnum = sizeof(tfont24) / sizeof(typFNT_GB24);
 
     for (k = 0; k < HZnum; k++)
     {
@@ -640,7 +653,7 @@ void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
             {
                 for (j = 0; j < 8; j++)
                 {
-                    if (!mode) //�ǵ��ӷ�ʽ
+                    if (!mode)
                     {
                         if (tfont24[k].Msk[i] & (0x80 >> j))
                             Lcd_WriteData_16Bit(fc);
@@ -651,7 +664,7 @@ void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                     {
                         POINT_COLOR = fc;
                         if (tfont24[k].Msk[i] & (0x80 >> j))
-                            LCD_DrawPoint(x, y); //��һ����
+                            LCD_DrawPoint(x, y);
                         x++;
                         if ((x - x0) == 24)
                         {
@@ -663,10 +676,10 @@ void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                 }
             }
         }
-        continue; //���ҵ���Ӧ�����ֿ������˳�����ֹ��������ظ�ȡģ����Ӱ��
+        continue;
     }
 
-    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1); //�ָ�����Ϊȫ��
+    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1);
 }
 
 /*****************************************************************************
@@ -681,13 +694,13 @@ void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                                 mode:0-no overlying,1-overlying
  * @retvalue   :None
 ******************************************************************************/
-void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
+void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, char *s, u8 mode)
 {
     u8 i, j;
     u16 k;
     u16 HZnum;
     u16 x0 = x;
-    HZnum = sizeof(tfont32) / sizeof(typFNT_GB32); //�Զ�ͳ�ƺ�����Ŀ
+    HZnum = sizeof(tfont32) / sizeof(typFNT_GB32);
     for (k = 0; k < HZnum; k++)
     {
         if ((tfont32[k].Index[0] == *(s)) && (tfont32[k].Index[1] == *(s + 1)))
@@ -697,7 +710,7 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
             {
                 for (j = 0; j < 8; j++)
                 {
-                    if (!mode) //�ǵ��ӷ�ʽ
+                    if (!mode)
                     {
                         if (tfont32[k].Msk[i] & (0x80 >> j))
                             Lcd_WriteData_16Bit(fc);
@@ -708,7 +721,7 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                     {
                         POINT_COLOR = fc;
                         if (tfont32[k].Msk[i] & (0x80 >> j))
-                            LCD_DrawPoint(x, y); //��һ����
+                            LCD_DrawPoint(x, y);
                         x++;
                         if ((x - x0) == 32)
                         {
@@ -720,10 +733,10 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                 }
             }
         }
-        continue; //���ҵ���Ӧ�����ֿ������˳�����ֹ��������ظ�ȡģ����Ӱ��
+        continue;
     }
 
-    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1); //�ָ�����Ϊȫ��
+    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1);
 }
 
 /*****************************************************************************
@@ -739,21 +752,21 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                                 mode:0-no overlying,1-overlying
  * @retvalue   :None
 ******************************************************************************/
-/* void Show_Str(u16 x, u16 y, u16 fc, u16 bc, u8 *str, u8 size, u8 mode)
+void Show_Str(u16 x, u16 y, u16 fc, u16 bc, char *str, u8 size, u8 mode)
 {
     u16 x0 = x;
-    u8 bHz = 0;       //�ַ���������
-    while (*str != 0) //����δ����
+    u8 bHz = 0;
+    while (*str != 0)
     {
         if (!bHz)
         {
             if (x > (lcddev.width - size / 2) || y > (lcddev.height - size))
                 return;
             if (*str > 0x80)
-                bHz = 1; //����
-            else         //�ַ�
+                bHz = 1;
+            else
             {
-                if (*str == 0x0D) //���з���
+                if (*str == 0x0D)
                 {
                     y += size;
                     x = x0;
@@ -761,25 +774,25 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                 }
                 else
                 {
-                    if (size > 16) //�ֿ���û�м���12X24 16X32��Ӣ������,��8X16����
+                    if (size > 16)
                     {
                         LCD_ShowChar(x, y, fc, bc, *str, 16, mode);
-                        x += 8; //�ַ�,Ϊȫ�ֵ�һ��
+                        x += 8;
                     }
                     else
                     {
                         LCD_ShowChar(x, y, fc, bc, *str, size, mode);
-                        x += size / 2; //�ַ�,Ϊȫ�ֵ�һ��
+                        x += size / 2;
                     }
                 }
                 str++;
             }
         }
-        else //����
+        else
         {
             if (x > (lcddev.width - size) || y > (lcddev.height - size))
                 return;
-            bHz = 0; //�к��ֿ�
+            bHz = 0;
             if (size == 32)
                 GUI_DrawFont32(x, y, fc, bc, str, mode);
             else if (size == 24)
@@ -788,10 +801,10 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                 GUI_DrawFont16(x, y, fc, bc, str, mode);
 
             str += 2;
-            x += size; //��һ������ƫ��
+            x += size;
         }
     }
-} */
+}
 
 /*****************************************************************************
  * @name       :void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, u8 *str,u8 size,u8 mode)
@@ -806,7 +819,7 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s, u8 mode)
                                 mode:0-no overlying,1-overlying
  * @retvalue   :None
 ******************************************************************************/
-void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, u8 *str, u8 size, u8 mode)
+void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, char *str, u8 size, u8 mode)
 {
     u16 len = strlen((const char *)str);
     u16 x1 = (lcddev.width - len * 8) / 2;
@@ -814,7 +827,7 @@ void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, u8 *str, u8 size, u8 mode)
 }
 
 /*****************************************************************************
- * @name       :void Gui_Drawbmp16(u16 x,u16 y,u16 pwidth, u16 pheight, const unsigned char *p) //��ʾͼƬ
+ * @name       :void Gui_Drawbmp16(u16 x,u16 y,u16 pwidth, u16 pheight, const unsigned char *p)
  * @date       :2018-08-09
  * @function   :Display a 16-bit BMP image
  * @parameters :x:the bebinning x coordinate of the BMP image
@@ -822,22 +835,22 @@ void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, u8 *str, u8 size, u8 mode)
                                 p:the start address of image array
  * @retvalue   :None
 ******************************************************************************/
-void Gui_Drawbmp16(u16 x, u16 y, u16 pwidth, u16 pheight, const unsigned char *p) //��ʾͼƬ
+void Gui_Drawbmp16(u16 x, u16 y, u16 pwidth, u16 pheight, const unsigned char *p)
 {
     int i;
     unsigned char picH, picL;
-    LCD_SetWindows(x, y, x + pwidth - 1, y + pheight - 1); //��������
+    LCD_SetWindows(x, y, x + pwidth - 1, y + pheight - 1);
     for (i = 0; i < pwidth * pheight; i++)
     {
-        picL = *(p + i * 2); //���ݵ�λ��ǰ
+        picL = *(p + i * 2);
         picH = *(p + i * 2 + 1);
         Lcd_WriteData_16Bit(picH << 8 | picL);
     }
-    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1); //�ָ���ʾ����Ϊȫ��
+    LCD_SetWindows(0, 0, lcddev.width - 1, lcddev.height - 1);
 }
 
 /*******************************************************************
- * @name       :void LCD_Draw9Point(uint16_t x, uint16_t y, uint16_t color)
+ * @name       :void LCD_Draw9Point(u16 x, u16 y, u16 color)
  * @date       :2018-12-29
  * @function   :Draw a point with a radius of 9 pixels in LCD screen
  * @parameters :x:the x coordinate of the point
@@ -845,7 +858,7 @@ void Gui_Drawbmp16(u16 x, u16 y, u16 pwidth, u16 pheight, const unsigned char *p
                                 color:the color value of the point
  * @retvalue   :None
 ********************************************************************/
-void LCD_Draw9Point(uint16_t x, uint16_t y, uint16_t color)
+void LCD_Draw9Point(u16 x, u16 y, u16 color)
 {
     POINT_COLOR = color;
     LCD_DrawPoint(x - 1, y - 4);
@@ -864,7 +877,7 @@ void LCD_Draw9Point(uint16_t x, uint16_t y, uint16_t color)
 }
 
 /*******************************************************************
- * @name       :void Draw_TextBox(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend)
+ * @name       :void Draw_TextBox(u16 xstart, u16 ystart, u16 xend, u16 yend)
  * @date       :2018-12-29
  * @function   :Draw a text input box
  * @parameters :xstart:the bebinning x coordinate of the specified area
@@ -873,25 +886,25 @@ void LCD_Draw9Point(uint16_t x, uint16_t y, uint16_t color)
                                 yend:the ending y coordinate of the specified area
  * @retvalue   :None
 ********************************************************************/
-void Draw_TextBox(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend)
+void Draw_TextBox(u16 xstart, u16 ystart, u16 xend, u16 yend)
 {
     POINT_COLOR = DARKGRAY;
-    LCD_DrawLine(xstart, ystart, xend, ystart);     //����������1
-    LCD_DrawLine(xstart, ystart + 1, xstart, yend); //����������1
+    LCD_DrawLine(xstart, ystart, xend, ystart);
+    LCD_DrawLine(xstart, ystart + 1, xstart, yend);
     POINT_COLOR = BLACK;
-    LCD_DrawLine(xstart + 1, ystart + 1, xend - 1, ystart + 1); //����������2
-    LCD_DrawLine(xstart + 1, ystart + 2, xstart + 1, yend - 1); //����������2
+    LCD_DrawLine(xstart + 1, ystart + 1, xend - 1, ystart + 1);
+    LCD_DrawLine(xstart + 1, ystart + 2, xstart + 1, yend - 1);
     POINT_COLOR = WHITE;
-    LCD_DrawLine(xstart, yend, xend, yend); //���ײ�����1
-    LCD_DrawLine(xend, ystart, xend, yend); //����������1
+    LCD_DrawLine(xstart, yend, xend, yend);
+    LCD_DrawLine(xend, ystart, xend, yend);
     POINT_COLOR = LGRAY;
-    LCD_DrawLine(xstart + 1, yend - 1, xend - 1, yend - 1); //���ײ�����2
-    LCD_DrawLine(xend - 1, ystart + 1, xend - 1, yend - 1); //����������2
+    LCD_DrawLine(xstart + 1, yend - 1, xend - 1, yend - 1);
+    LCD_DrawLine(xend - 1, ystart + 1, xend - 1, yend - 1);
     LCD_Fill(xstart + 2, ystart + 2, xend - 2, yend - 2, WHITE);
 }
 
 /*******************************************************************
- * @name       :void Draw_Button(uint16_t xstart,uint16_t ystart,uint16_t xend,uint16_t yend)
+ * @name       :void Draw_Button(u16 xstart,u16 ystart,u16 xend,u16 yend)
  * @date       :2018-12-29
  * @function   :Draw a button
  * @parameters :xstart:the bebinning x coordinate of the button
@@ -900,14 +913,14 @@ void Draw_TextBox(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend
                                 yend:the ending y coordinate of the button
  * @retvalue   :None
 ********************************************************************/
-void Draw_Button(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend)
+void Draw_Button(u16 xstart, u16 ystart, u16 xend, u16 yend)
 {
     EscButton(xstart, ystart, xend, yend);
-    LCD_Fill(xstart + 2, ystart + 2, xend - 2, yend - 2, LGRAY); //����м���ɫ
+    LCD_Fill(xstart + 2, ystart + 2, xend - 2, yend - 2, LGRAY);
 }
 
 /*******************************************************************
- * @name       :void EscButton(uint16_t xstart,uint16_t ystart,uint8_t xend,uint16_t yend)
+ * @name       :void EscButton(u16 xstart,u16 ystart,u8 xend,u16 yend)
  * @date       :2018-12-29
  * @function   :Draw a Esc button
  * @parameters :xstart:the bebinning x coordinate of the button
@@ -916,24 +929,24 @@ void Draw_Button(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend)
                                 yend:the ending y coordinate of the button
  * @retvalue   :None
 ********************************************************************/
-void EscButton(uint16_t xstart, uint16_t ystart, uint8_t xend, uint16_t yend)
+void EscButton(u16 xstart, u16 ystart, u8 xend, u16 yend)
 {
     POINT_COLOR = LGRAY;
-    LCD_DrawLine(xstart, ystart, xend, ystart); //����������1
-    LCD_DrawLine(xstart, ystart, xstart, yend); //���������1
+    LCD_DrawLine(xstart, ystart, xend, ystart);
+    LCD_DrawLine(xstart, ystart, xstart, yend);
     POINT_COLOR = WHITE;
-    LCD_DrawLine(xstart + 1, ystart + 1, xend - 1, ystart + 1); //����������2
-    LCD_DrawLine(xstart + 1, ystart + 1, xstart + 1, yend - 1); //���������2
+    LCD_DrawLine(xstart + 1, ystart + 1, xend - 1, ystart + 1);
+    LCD_DrawLine(xstart + 1, ystart + 1, xstart + 1, yend - 1);
     POINT_COLOR = BLACK;
-    LCD_DrawLine(xstart, yend, xend, yend); //���ײ�����1
-    LCD_DrawLine(xend, ystart, xend, yend); //���ұ�����1
+    LCD_DrawLine(xstart, yend, xend, yend);
+    LCD_DrawLine(xend, ystart, xend, yend);
     POINT_COLOR = DARKGRAY;
-    LCD_DrawLine(xstart + 1, yend - 1, xend - 1, yend - 1); //���ײ�����2
-    LCD_DrawLine(xend - 1, ystart + 1, xend - 1, yend - 1); //���ұ�����2
+    LCD_DrawLine(xstart + 1, yend - 1, xend - 1, yend - 1);
+    LCD_DrawLine(xend - 1, ystart + 1, xend - 1, yend - 1);
 }
 
 /*******************************************************************
- * @name       :void SetButton(uint8_t xstart,uint16_t ystart,uint8_t xend,uint16_t yend)
+ * @name       :void SetButton(u8 xstart,u16 ystart,u8 xend,u16 yend)
  * @date       :2018-12-29
  * @function   :Set a button
  * @parameters :xstart:the bebinning x coordinate of the button
@@ -942,31 +955,31 @@ void EscButton(uint16_t xstart, uint16_t ystart, uint8_t xend, uint16_t yend)
                                 yend:the ending y coordinate of the button
  * @retvalue   :None
 ********************************************************************/
-void SetButton(uint8_t xstart, uint16_t ystart, uint8_t xend, uint16_t yend)
+void SetButton(u8 xstart, u16 ystart, u8 xend, u16 yend)
 {
     POINT_COLOR = BLACK;
-    LCD_DrawLine(xstart, ystart, xend, ystart); //����������1
-    LCD_DrawLine(xstart, ystart, xstart, yend); //���������1
+    LCD_DrawLine(xstart, ystart, xend, ystart);
+    LCD_DrawLine(xstart, ystart, xstart, yend);
     POINT_COLOR = DARKGRAY;
-    LCD_DrawLine(xstart + 1, ystart + 1, xend - 1, ystart + 1); //����������2
-    LCD_DrawLine(xstart + 1, ystart + 1, xstart + 1, yend - 1); //���������2
+    LCD_DrawLine(xstart + 1, ystart + 1, xend - 1, ystart + 1);
+    LCD_DrawLine(xstart + 1, ystart + 1, xstart + 1, yend - 1);
     POINT_COLOR = LGRAY;
-    LCD_DrawLine(xstart + 1, yend - 1, xend - 1, yend - 1); //���ײ�����1
-    LCD_DrawLine(xend - 1, ystart + 1, xend - 1, yend - 1); //���ұ�����1
+    LCD_DrawLine(xstart + 1, yend - 1, xend - 1, yend - 1);
+    LCD_DrawLine(xend - 1, ystart + 1, xend - 1, yend - 1);
     POINT_COLOR = WHITE;
-    LCD_DrawLine(xstart, yend, xend, yend); //���ײ�����2
-    LCD_DrawLine(xend, ystart, xend, yend); //���ұ�����2
+    LCD_DrawLine(xstart, yend, xend, yend);
+    LCD_DrawLine(xend, ystart, xend, yend);
 }
 
 /*******************************************************************
- * @name       :void Draw_DirectButton(uint16_t xstart, uint16_t ystart)
+ * @name       :void Draw_DirectButton(u16 xstart, u16 ystart)
  * @date       :2018-12-29
  * @function   :Set a direct button
  * @parameters :xstart:the bebinning x coordinate of the button
                 ystart:the bebinning y coordinate of the button
  * @retvalue   :None
 ********************************************************************/
-void Draw_DirectButton(uint16_t xstart, uint16_t ystart)
+void Draw_DirectButton(u16 xstart, u16 ystart)
 {
     POINT_COLOR = BLACK;
     LCD_DrawLine(xstart + 6, ystart + 8, xstart + 14, ystart + 8);
@@ -979,7 +992,7 @@ void Draw_DirectButton(uint16_t xstart, uint16_t ystart)
 }
 
 /*******************************************************************
- * @name       :void Draw_Window(uint16_t xstart,uint16_t ystart,uint16_t xend,uint16_t yend,uint8_t* caption)
+ * @name       :void Draw_Window(u16 xstart,u16 ystart,u16 xend,u16 yend,u8* caption)
  * @date       :2018-12-29
  * @function   :Set a window
  * @parameters :xstart:the bebinning x coordinate of the window
@@ -989,11 +1002,11 @@ void Draw_DirectButton(uint16_t xstart, uint16_t ystart)
                                 caption:the text of the window
  * @retvalue   :None
 ********************************************************************/
-void Draw_Window(uint16_t xstart, uint16_t ystart, uint16_t xend, uint16_t yend, uint8_t *caption)
+void Draw_Window(u16 xstart, u16 ystart, u16 xend, u16 yend, char *caption)
 {
-    Draw_Button(xstart, ystart, xend, yend);                           // ��ʾ���崰��
-    LCD_Fill(xstart + 3, ystart + 3, xend - 3, ystart + 25, DARKBLUE); // ��ʾ������
-    Draw_TextBox(xstart + 3, ystart + 29, xend - 3, yend - 3);         // ��ʾ�ı�������
+    Draw_Button(xstart, ystart, xend, yend);
+    LCD_Fill(xstart + 3, ystart + 3, xend - 3, ystart + 25, DARKBLUE);
+    Draw_TextBox(xstart + 3, ystart + 29, xend - 3, yend - 3);
     POINT_COLOR = WHITE;
     BACK_COLOR = DARKBLUE;
     Show_Str(xstart + 5, ystart + 6, POINT_COLOR, BACK_COLOR, caption, 16, 1);

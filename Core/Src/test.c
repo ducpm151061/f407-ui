@@ -19,7 +19,6 @@ void Ctp_Test(void)
     u8 t = 0;
     u8 i = 0, j = 0;
     u16 lastpos[5][2];
-    DrawTestPage("TOUCH TEST");
     LCD_ShowString(0, 0, 16, "RST", 1);
     POINT_COLOR = RED;
     while (1)
@@ -44,8 +43,7 @@ void Ctp_Test(void)
                         {
                             continue;
                         }
-                        DrawTestPage("TOUCH TEST");
-                        LCD_ShowString(0, 0, 16, "RST", 1);
+                        LCD_ShowString(0, 0, 16, (char *)"RST", 1);
                         POINT_COLOR = RED;
                     }
                     else
@@ -114,27 +112,27 @@ void Check_Font(void)
     while (font_init())
     {
         key = KEY_Scan(0);
-        LCD_ShowString(lcddev.width / 2 - 44, 90, 16, "Font Error!", 1);
+        LCD_ShowString(lcddev.width / 2 - 44, 90, 16, (char *)"Font Error!", 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 44, 90, lcddev.width / 2 + 44, 106, WHITE);
         delay_ms(200);
-        LCD_ShowString(lcddev.width / 2 - 104, 120, 16, "press KEY0 to update Font!", 1);
+        LCD_ShowString(lcddev.width / 2 - 104, 120, 16, (char *)"press KEY0 to update Font!", 1);
         if (key == KEY0_PRES)
         {
             LCD_Fill(lcddev.width / 2 - 104, 120, lcddev.width / 2 + 104, 136, WHITE);
-            while (update_font(lcddev.width / 2 - 100, 120, 16, "0:"))
+            while (update_font(lcddev.width / 2 - 100, 120, 16, (u8 *)"0:"))
             {
-                LCD_ShowString(lcddev.width / 2 - 76, 120, 16, "Font Update Failed!", 1);
+                LCD_ShowString(lcddev.width / 2 - 76, 120, 16, (char *)"Font Update Failed!", 1);
                 delay_ms(200);
                 LCD_Fill(lcddev.width / 2 - 76, 120, lcddev.width / 2 + 76, 136, WHITE);
                 delay_ms(200);
             }
             POINT_COLOR = BLUE;
-            LCD_ShowString(lcddev.width / 2 - 100, 120, 16, "  Font Update Success!  ", 0);
+            LCD_ShowString(lcddev.width / 2 - 100, 120, 16, (char *)"  Font Update Success!  ", 0);
         }
     }
     POINT_COLOR = BLUE;
-    LCD_ShowString(lcddev.width / 2 - 28, 90, 16, "Font OK", 0);
+    LCD_ShowString(lcddev.width / 2 - 28, 90, 16, (char *)"Font OK", 0);
 }
 
 static u16 pic_get_tnum(u8 *path)
@@ -182,15 +180,15 @@ void Show_Picture(void)
     POINT_COLOR = RED;
     while (f_opendir(&picdir, "0:/PICTURE"))
     {
-        Show_Str(lcddev.width / 2 - 72, 145, lcddev.width, 16, "PICTURE!", 16, 1);
+        Show_Str(lcddev.width / 2 - 72, 145, lcddev.width, 16, (char *)"PICTURE!", 16, 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 72, 145, lcddev.width / 2 + 72, 161, WHITE);
         delay_ms(200);
     }
-    totpicnum = pic_get_tnum("0:/PICTURE");
+    totpicnum = pic_get_tnum((u8 *)("0:/PICTURE"));
     while (totpicnum == NULL)
     {
-        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, "!", 16, 1);
+        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, (char *)"!", 16, 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 52, 145, lcddev.width / 2 + 52, 161, WHITE);
         delay_ms(200);
@@ -201,7 +199,7 @@ void Show_Picture(void)
     picindextbl = mymalloc(SRAMIN, 2 * totpicnum);
     while (picfileinfo.lfname == NULL || pname == NULL || picindextbl == NULL)
     {
-        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, "!", 16, 1);
+        Show_Str(lcddev.width / 2 - 52, 145, lcddev.width, 16, (char *)"!", 16, 1);
         delay_ms(200);
         LCD_Fill(lcddev.width / 2 - 52, 145, lcddev.width / 2 + 52, 161, WHITE);
         delay_ms(200);
@@ -227,7 +225,7 @@ void Show_Picture(void)
         }
     }
     POINT_COLOR = BLUE;
-    Show_Str(lcddev.width / 2 - 44, 145, lcddev.width, 16, "...", 16, 1);
+    Show_Str(lcddev.width / 2 - 44, 145, lcddev.width, 16, (char *)"...", 16, 1);
     delay_ms(1500);
     delay_ms(500);
     piclib_init();
@@ -244,7 +242,7 @@ void Show_Picture(void)
         strcat((char *)pname, (const char *)fn);
         LCD_Clear(BLACK);
         ai_load_picfile(pname, 0, 0, lcddev.width, lcddev.height, 1);
-        Show_Str(2, 2, 240, 16, pname, 16, 1);
+        Show_Str(2, 2, 240, 16, (char *)pname, 16, 1);
         t = 0;
         while (1)
         {

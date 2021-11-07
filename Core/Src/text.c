@@ -40,7 +40,7 @@ void Get_HzMat(unsigned char *code, unsigned char *mat, u8 size)
         break;
     }
 }
-void Show_Font(u16 x, u16 y, u8 *font, u8 size, u8 mode)
+void Show_Font(u16 x, u16 y, char *font, u8 size, u8 mode)
 {
     u8 temp, t, t1;
     u16 y0 = y;
@@ -69,55 +69,8 @@ void Show_Font(u16 x, u16 y, u8 *font, u8 size, u8 mode)
         }
     }
 }
-void Show_Str(u16 x, u16 y, u16 width, u16 height, u8 *str, u8 size, u8 mode)
-{
-    u16 x0 = x;
-    u16 y0 = y;
-    u8 bHz = 0;
-    while (*str != 0)
-    {
-        if (!bHz)
-        {
-            if (*str > 0x80)
-                bHz = 1;
-            else
-            {
-                if (x > (x0 + width - size / 2))
-                {
-                    y += size;
-                    x = x0;
-                }
-                if (y > (y0 + height - size))
-                    break;
-                if (*str == 13)
-                {
-                    y += size;
-                    x = x0;
-                    str++;
-                }
-                else
-                    LCD_ShowChar(x, y, POINT_COLOR, BACK_COLOR, *str, size, mode);
-                str++;
-                x += size / 2;
-            }
-        }
-        else
-        {
-            bHz = 0;
-            if (x > (x0 + width - size))
-            {
-                y += size;
-                x = x0;
-            }
-            if (y > (y0 + height - size))
-                break;
-            Show_Font(x, y, str, size, mode);
-            str += 2;
-            x += size;
-        }
-    }
-}
-void Show_Str_Mid(u16 x, u16 y, u8 *str, u8 size, u8 len)
+
+void Show_Str_Mid(u16 x, u16 y, char *str, u8 size, u8 len)
 {
     u16 strlenth = 0;
     strlenth = strlen((const char *)str);

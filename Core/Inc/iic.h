@@ -1,7 +1,6 @@
 #ifndef __IIC_H
 #define __IIC_H
 #include "delay.h"
-#include "sys.h"
 
 #define SDA_IN()                                                                                                       \
     {                                                                                                                  \

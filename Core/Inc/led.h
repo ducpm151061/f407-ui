@@ -1,7 +1,7 @@
 
 #ifndef __LED_H
 #define __LED_H
-#include "sys.h"
+#include "delay.h"
 #define LED_IO_DEF 0
 
 #if LED_IO_DEF == 0
