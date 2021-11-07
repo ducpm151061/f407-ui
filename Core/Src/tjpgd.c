@@ -1098,7 +1098,7 @@ void jpeg_freeall(void)
     pic_memfree(jpg_buffer);
 }
 
-#else //��ʹ��malloc
+#else 
 
 FIL tf_jpeg;
 JDEC tjpeg_dev;

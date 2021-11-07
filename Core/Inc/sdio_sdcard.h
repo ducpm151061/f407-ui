@@ -124,7 +124,6 @@ typedef struct
     u8 Reserved4;           /*!< always 1*/
 } SD_CSD;
 
-// SD��CID�Ĵ�������
 typedef struct
 {
     u8 ManufacturerID; /*!< ManufacturerID */
@@ -138,7 +137,6 @@ typedef struct
     u8 CID_CRC;        /*!< CID CRC */
     u8 Reserved2;      /*!< always 1 */
 } SD_CID;
-// SD��״̬
 typedef enum
 {
     SD_CARD_READY = ((uint32_t)0x00000001),
@@ -163,7 +161,7 @@ typedef struct
 } SD_CardInfo;
 extern SD_CardInfo SDCardInfo;
 
-// SDIO ָ�
+
 #define SD_CMD_GO_IDLE_STATE ((u8)0)
 #define SD_CMD_SEND_OP_COND ((u8)1)
 #define SD_CMD_ALL_SEND_CID ((u8)2)
@@ -217,7 +215,7 @@ extern SD_CardInfo SDCardInfo;
 
 /**
  * @brief Following commands are SD Card Specific commands.
- *        SDIO_APP_CMD ��CMD55 should be sent before sending these commands.
+ *        SDIO_APP_CMD CMD55 should be sent before sending these commands.
  */
 #define SD_CMD_APP_SD_SET_BUSWIDTH ((u8)6)           /*!< For SD Card only */
 #define SD_CMD_SD_APP_STAUS ((u8)13)                 /*!< For SD Card only */

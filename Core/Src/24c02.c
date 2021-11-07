@@ -10,7 +10,7 @@
  ******************************************************************************/
 void AT24C02_Init(void)
 {
-    IIC_Init(); // IIC��ʼ��
+    IIC_Init(); 
 }
 
 /*****************************************************************************
@@ -26,22 +26,22 @@ u8 AT24C02_ReadOneByte(u16 ReadAddr)
     IIC_Start();
     if (EE_TYPE > AT24C16)
     {
-        IIC_Send_Byte(0XA0); //����д����
+        IIC_Send_Byte(0XA0);
         IIC_Wait_Ack();
-        IIC_Send_Byte(ReadAddr >> 8); //���͸ߵ�ַ
+        IIC_Send_Byte(ReadAddr >> 8); 
     }
     else
     {
-        IIC_Send_Byte(0XA0 + ((ReadAddr / 256) << 1)); //����������ַ0XA0,д����
+        IIC_Send_Byte(0XA0 + ((ReadAddr / 256) << 1));
     }
     IIC_Wait_Ack();
-    IIC_Send_Byte(ReadAddr % 256); //���͵͵�ַ
+    IIC_Send_Byte(ReadAddr % 256);
     IIC_Wait_Ack();
     IIC_Start();
-    IIC_Send_Byte(0XA1); //�������ģʽ
+    IIC_Send_Byte(0XA1); 
     IIC_Wait_Ack();
     temp = IIC_Read_Byte(0);
-    IIC_Stop(); //����һ��ֹͣ����
+    IIC_Stop(); 
     return temp;
 }
 
@@ -58,20 +58,20 @@ void AT24C02_WriteOneByte(u16 WriteAddr, u8 DataToWrite)
     IIC_Start();
     if (EE_TYPE > AT24C16)
     {
-        IIC_Send_Byte(0XA0); //����д����
+        IIC_Send_Byte(0XA0); 
         IIC_Wait_Ack();
-        IIC_Send_Byte(WriteAddr >> 8); //���͸ߵ�ַ
+        IIC_Send_Byte(WriteAddr >> 8); 
     }
     else
     {
-        IIC_Send_Byte(0XA0 + ((WriteAddr / 256) << 1)); //����������ַ0XA0,д����
+        IIC_Send_Byte(0XA0 + ((WriteAddr / 256) << 1)); 
     }
     IIC_Wait_Ack();
-    IIC_Send_Byte(WriteAddr % 256); //���͵͵�ַ
+    IIC_Send_Byte(WriteAddr % 256); 
     IIC_Wait_Ack();
-    IIC_Send_Byte(DataToWrite); //�����ֽ�
+    IIC_Send_Byte(DataToWrite);
     IIC_Wait_Ack();
-    IIC_Stop(); //����һ��ֹͣ����
+    IIC_Stop(); 
     delay_ms(10);
 }
 
@@ -129,12 +129,12 @@ u32 AT24C02_ReadLenByte(u16 ReadAddr, u8 Len)
 u8 AT24C02_Check(void)
 {
     u8 temp;
-    temp = AT24C02_ReadOneByte(255); //����ÿ�ο�����дAT24CXX
+    temp = AT24C02_ReadOneByte(255);
     if (temp == 0X55)
     {
         return 0;
     }
-    else //�ų���һ�γ�ʼ�������
+    else 
     {
         AT24C02_WriteOneByte(255, 0X55);
         temp = AT24C02_ReadOneByte(255);

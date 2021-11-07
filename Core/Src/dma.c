@@ -26,8 +26,7 @@ void DMA_Config(DMA_Stream_TypeDef *DMA_Streamx, u32 chx, u32 par, u32 mar, u16 
     DMA_DeInit(DMA_Streamx);
     while (DMA_GetCmdStatus(DMA_Streamx) != DISABLE)
     {
-    } //�ȴ�DMA������
-    /* ���� DMA Stream */
+    } 
     DMA_InitStructure.DMA_Channel = chx;
     DMA_InitStructure.DMA_PeripheralBaseAddr = par;
     DMA_InitStructure.DMA_Memory0BaseAddr = mar;

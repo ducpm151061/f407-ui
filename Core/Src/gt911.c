@@ -293,7 +293,7 @@ u8 GT911_Scan(void)
                     tp_dev.x[0] = tp_dev.x[4];
                     tp_dev.y[0] = tp_dev.y[4];
                     buf[0] = 0X80;
-                    tp_dev.sta = tempsta; //�ָ�tp_dev.sta
+                    tp_dev.sta = tempsta; 
                 }
             }
 #if !SCAN_TYPE

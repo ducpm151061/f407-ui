@@ -234,7 +234,7 @@ void LCD_GPIOInit(void)
     FSMC_NORSRAMTimingInitTypeDef readWriteTiming;
     FSMC_NORSRAMTimingInitTypeDef writeTiming;
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE, ENABLE); //ʹ��PB,PD,PEʱ��
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE, ENABLE); 
     RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
@@ -1413,7 +1413,7 @@ void LCD_Init(void)
         break;
     }
     case 0x5510: {
-        //************* NT35510��ʼ��**********//
+        //************* NT35510**********//
         LCD_WR_REG(0xF000);
         LCD_WR_DATA(0x55);
         LCD_WR_REG(0xF001);
@@ -2229,7 +2229,7 @@ void LCD_Init(void)
         break;
     }
     case 0x1963: {
-        //************* SSD1963��ʼ��**********//
+        //************* SSD1963**********//
         LCD_WR_REG(0xE2);
         // OSC*(N+1), VCO = 300MHz
         LCD_WR_DATA(0x1D);

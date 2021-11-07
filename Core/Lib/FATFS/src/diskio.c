@@ -12,28 +12,25 @@
 #include "sdio_sdcard.h"
 #include "w25q64.h"
 
-#define SD_CARD 0  // SD��,����Ϊ0
-#define EX_FLASH 1 //�ⲿflash,����Ϊ1
+#define SD_CARD 0  
+#define EX_FLASH 1
 
 #define FLASH_SECTOR_SIZE 512
-//����W25Q64
-//ǰ10M�ֽڸ�fatfs��,10M�ֽں�,���ڴ���ֿ�,�ֿ�ռ��3.09M.	14M�ֽ��Ժ�,���ͻ��Լ���
-u16 FLASH_SECTOR_COUNT = 2048 * 10; // W25Q64,ǰ10M�ֽڸ�FATFSռ��
-#define FLASH_BLOCK_SIZE 8          //ÿ��BLOCK��8������
+u16 FLASH_SECTOR_COUNT = 2048 * 10; 
+#define FLASH_BLOCK_SIZE 8          
 
-//��ʼ������
 DSTATUS disk_initialize(BYTE pdrv /* Physical drive nmuber (0..) */
 )
 {
     u8 res = 0;
     switch (pdrv)
     {
-    case SD_CARD:        // SD��
+    case SD_CARD:       
         res = SD_Init(); // SD_Init()
         break;
-    case EX_FLASH: //�ⲿflash
+    case EX_FLASH:
         W25Q64_Init();
-        FLASH_SECTOR_COUNT = 2048 * 10; // W25Q1218,ǰ10M�ֽڸ�FATFSռ��
+        FLASH_SECTOR_COUNT = 2048 * 10; 
         break;
     default:
         res = 1;
@@ -41,21 +38,15 @@ DSTATUS disk_initialize(BYTE pdrv /* Physical drive nmuber (0..) */
     if (res)
         return STA_NOINIT;
     else
-        return 0; //��ʼ���ɹ�
+        return 0; 
 }
 
-//��ô���״̬
 DSTATUS disk_status(BYTE pdrv /* Physical drive nmuber (0..) */
 )
 {
     return 0;
 }
 
-//������
-// drv:���̱��0~9
-//*buff:���ݽ��ջ����׵�ַ
-// sector:������ַ
-// count:��Ҫ��ȡ��������
 DRESULT disk_read(BYTE pdrv,    /* Physical drive nmuber (0..) */
                   BYTE *buff,   /* Data buffer to store read data */
                   DWORD sector, /* Sector address (LBA) */
@@ -64,13 +55,13 @@ DRESULT disk_read(BYTE pdrv,    /* Physical drive nmuber (0..) */
 {
     u8 res = 0;
     if (!count)
-        return RES_PARERR; // count���ܵ���0�����򷵻ز�������
+        return RES_PARERR; 
     switch (pdrv)
     {
-    case SD_CARD: // SD��
+    case SD_CARD: 
         res = SD_ReadDisk(buff, sector, count);
         break;
-    case EX_FLASH: //�ⲿflash
+    case EX_FLASH: 
         for (; count > 0; count--)
         {
             W25Q64_Read(buff, sector * FLASH_SECTOR_SIZE, FLASH_SECTOR_SIZE);
@@ -82,18 +73,11 @@ DRESULT disk_read(BYTE pdrv,    /* Physical drive nmuber (0..) */
     default:
         res = 1;
     }
-    //��������ֵ����SPI_SD_driver.c�ķ���ֵת��ff.c�ķ���ֵ
     if (res == 0x00)
         return RES_OK;
     else
         return RES_ERROR;
 }
-
-//д����
-// drv:���̱��0~9
-//*buff:���������׵�ַ
-// sector:������ַ
-// count:��Ҫд���������
 #if _USE_WRITE
 DRESULT disk_write(BYTE pdrv,        /* Physical drive nmuber (0..) */
                    const BYTE *buff, /* Data to be written */
@@ -103,13 +87,13 @@ DRESULT disk_write(BYTE pdrv,        /* Physical drive nmuber (0..) */
 {
     u8 res = 0;
     if (!count)
-        return RES_PARERR; // count���ܵ���0�����򷵻ز�������
+        return RES_PARERR; 
     switch (pdrv)
     {
-    case SD_CARD: // SD��
+    case SD_CARD: 
         res = SD_WriteDisk((u8 *)buff, sector, count);
         break;
-    case EX_FLASH: //�ⲿflash
+    case EX_FLASH: 
         for (; count > 0; count--)
         {
             W25Q64_Write((u8 *)buff, sector * FLASH_SECTOR_SIZE, FLASH_SECTOR_SIZE);
@@ -121,7 +105,6 @@ DRESULT disk_write(BYTE pdrv,        /* Physical drive nmuber (0..) */
     default:
         res = 1;
     }
-    //��������ֵ����SPI_SD_driver.c�ķ���ֵת��ff.c�ķ���ֵ
     if (res == 0x00)
         return RES_OK;
     else
@@ -129,10 +112,6 @@ DRESULT disk_write(BYTE pdrv,        /* Physical drive nmuber (0..) */
 }
 #endif
 
-//�����������Ļ��
-// drv:���̱��0~9
-// ctrl:���ƴ���
-//*buff:����/���ջ�����ָ��
 #if _USE_IOCTL
 DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
                    BYTE cmd,  /* Control code */
@@ -140,7 +119,7 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
 )
 {
     DRESULT res;
-    if (pdrv == SD_CARD) // SD��
+    if (pdrv == SD_CARD) 
     {
         switch (cmd)
         {
@@ -164,7 +143,7 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
             break;
         }
     }
-    else if (pdrv == EX_FLASH) //�ⲿFLASH
+    else if (pdrv == EX_FLASH) 
     {
         switch (cmd)
         {
@@ -189,11 +168,10 @@ DRESULT disk_ioctl(BYTE pdrv, /* Physical drive nmuber (0..) */
         }
     }
     else
-        res = RES_ERROR; //�����Ĳ�֧��
+        res = RES_ERROR; 
     return res;
 }
 #endif
-//���ʱ��
 // User defined function to give a current time to fatfs module      */
 // 31-25: Year(0-127 org.1980), 24-21: Month(1-12), 20-16: Day(1-31) */
 // 15-11: Hour(0-23), 10-5: Minute(0-59), 4-0: Second(0-29 *2) */
@@ -201,12 +179,10 @@ DWORD get_fattime(void)
 {
     return 0;
 }
-//��̬�����ڴ�
 void *ff_memalloc(UINT size)
 {
     return (void *)mymalloc(SRAMIN, size);
 }
-//�ͷ��ڴ�
 void ff_memfree(void *mf)
 {
     myfree(SRAMIN, mf);

@@ -1392,7 +1392,7 @@ SD_Error CmdResp6Error(u8 cmd, u16 *prca)
         SDIO_ClearFlag(SDIO_FLAG_CCRCFAIL);
         return SD_CMD_CRC_FAIL;
     }
-    if (SDIO->RESPCMD != cmd) //�ж��Ƿ���Ӧcmd����
+    if (SDIO->RESPCMD != cmd) 
     {
         return SD_ILLEGAL_CMD;
     }

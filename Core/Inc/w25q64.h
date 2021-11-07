@@ -1,7 +1,6 @@
 #ifndef __W25Q64_H
 #define __W25Q64_H
 #include "sys.h"
-// W25Xϵ��/Qϵ��оƬ�б�
 // W25Q80  ID  0XEF13
 // W25Q16  ID  0XEF14
 // W25Q32  ID  0XEF15
@@ -13,10 +12,10 @@
 #define W25Q64 0XEF16
 #define W25Q128 0XEF17
 
-#define FLASH_SIZE 8 * 1024 * 1024 // FLASH ��СΪ8M�ֽ�
+#define FLASH_SIZE 8 * 1024 * 1024
 
-extern u16 W25QXX_TYPE;     //����W25QXXоƬ�ͺ�
-#define W25Q64_CS PBout(14) // W25QXX��Ƭѡ�ź�
+extern u16 W25QXX_TYPE;
+#define W25Q64_CS PBout(14)
 
 #define W25X_WriteEnable 0x06
 #define W25X_WriteDisable 0x04
@@ -36,17 +35,17 @@ extern u16 W25QXX_TYPE;     //����W25QXXоƬ�ͺ�
 #define W25X_JedecDeviceID 0x9F
 
 void W25Q64_Init(void);
-u16 W25QXX_ReadID(void);         //��ȡFLASH ID
-u8 W25Q64_ReadSR(void);          //��ȡ״̬�Ĵ���
-void W25Q64_Write_SR(u8 sr);     //д״̬�Ĵ���
-void W25Q64_Write_Enable(void);  //дʹ��
-void W25Q64_Write_Disable(void); //д����
+u16 W25QXX_ReadID(void);
+u8 W25Q64_ReadSR(void);
+void W25Q64_Write_SR(u8 sr);
+void W25Q64_Write_Enable(void);
+void W25Q64_Write_Disable(void);
 void W25Q64_Write_NoCheck(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite);
-void W25Q64_Read(u8 *pBuffer, u32 ReadAddr, u16 NumByteToRead);    //��ȡflash
-void W25Q64_Write(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite); //д��flash
-void W25Q64_Erase_Chip(void);                                      //��Ƭ����
-void W25Q64_Erase_Sector(u32 Dst_Addr);                            //��������
-void W25Q64_Wait_Busy(void);                                       //�ȴ�����
-void W25Q64_PowerDown(void);                                       //�������ģʽ
-void W25Q64_WAKEUP(void);                                          //����
+void W25Q64_Read(u8 *pBuffer, u32 ReadAddr, u16 NumByteToRead);
+void W25Q64_Write(u8 *pBuffer, u32 WriteAddr, u16 NumByteToWrite);
+void W25Q64_Erase_Chip(void);
+void W25Q64_Erase_Sector(u32 Dst_Addr);
+void W25Q64_Wait_Busy(void);
+void W25Q64_PowerDown(void);
+void W25Q64_WAKEUP(void);
 #endif

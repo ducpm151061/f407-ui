@@ -67,7 +67,7 @@ void CTP_IIC_Start(void)
  ******************************************************************************/
 void CTP_IIC_Stop(void)
 {
-    CTP_SDA_OUT(); // sda�����
+    CTP_SDA_OUT(); 
     CTP_IIC_SCL = 0;
     CTP_IIC_SDA = 0;
     CTP_Delay();

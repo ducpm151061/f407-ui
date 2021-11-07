@@ -156,8 +156,8 @@ u8 RTP_Read_XY2(u16 *x, u16 *y)
     flag = RTP_Read_XY(&x2, &y2);
     if (flag == 0)
         return (0);
-    if (((x2 <= x1 && x1 < x2 + ERR_RANGE) || (x1 <= x2 && x2 < x1 + ERR_RANGE)) //ǰ�����β�����+-50��
-        && ((y2 <= y1 && y1 < y2 + ERR_RANGE) || (y1 <= y2 && y2 < y1 + ERR_RANGE)))
+    if (((x2 <= x1 && x1 < x2 + ERR_RANGE) || (x1 <= x2 && x2 < x1 + ERR_RANGE)) &&
+        ((y2 <= y1 && y1 < y2 + ERR_RANGE) || (y1 <= y2 && y2 < y1 + ERR_RANGE)))
     {
         *x = (x1 + x2) / 2;
         *y = (y1 + y2) / 2;
@@ -412,8 +412,8 @@ void RTP_Adjust(void)
                 RTP_Drow_Touch_Point(20, lcddev.height - 20, RED);
                 break;
             case 3:
-                RTP_Drow_Touch_Point(20, lcddev.height - 20, WHITE);              
-                RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, RED); 
+                RTP_Drow_Touch_Point(20, lcddev.height - 20, WHITE);
+                RTP_Drow_Touch_Point(lcddev.width - 20, lcddev.height - 20, RED);
                 break;
             case 4:
 
