@@ -1,5 +1,4 @@
 #include "aht10.h"
-#include "delay.h"
 
 static void AHT_IIC_Init(void)
 {

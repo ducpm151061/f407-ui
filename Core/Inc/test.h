@@ -35,6 +35,7 @@
 
 #include "aht10.h"
 #include "as5600.h"
+#include "bh1750.h"
 #include "custom_malloc.h"
 #include "exfuns.h"
 #include "ff.h"
@@ -49,6 +50,10 @@ void Ctp_Test(void);
 void W25Q64_Test(void);
 void AT24C02_Test(void);
 void WS_AT45DBXX_Test(void);
+void AS5600_Test(void);
+void AHT10_Test(void);
+void BH1750_Test(void);
+void TCS34725_Test(void);
 void Check_SDCard(void);
 void Check_Font(void);
 void Show_Picture(void);

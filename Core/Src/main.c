@@ -43,7 +43,8 @@ int main(void)
     W25Q64_Init();
     // AS_Init();
     // AHT_Init();
-    TCS34725_Init();
+    // TCS34725_Init();
+    // BH1750_Init();
     RNG_Init();
     Check_SDCard();
     // my_mem_init(SRAMIN);

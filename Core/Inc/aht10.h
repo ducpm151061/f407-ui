@@ -1,7 +1,6 @@
-#ifndef __IIC_H
-#define __IIC_H
+#ifndef __AHT10_H
+#define __AHT10_H
 #include "delay.h"
-#include "sys.h"
 /* PB10 SCL PB11 SDA */
 
 #define AHTX0_I2CADDR_DEFAULT (0x38 << 1) ///< AHT default i2c address
@@ -30,4 +29,5 @@ void AHT_Init(void);
 void AHT_Measure(void);
 void ATH_Read(int32_t *temperature, int32_t *humidity);
 void AHT_Reset(void);
+
 #endif

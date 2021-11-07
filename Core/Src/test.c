@@ -278,3 +278,34 @@ void Show_Picture(void)
     myfree(SRAMIN, pname);
     myfree(SRAMIN, picindextbl);
 }
+
+void TCS34725_Test(void)
+{
+    COLOR_RGBC rgb;
+    COLOR_HSL hsl;
+    TCS34725_GetRawData(&rgb);
+    RGBtoHSL(&rgb, &hsl);
+    PRINT("R=%d G=%d B=%d C=%d\r\n", rgb.r, rgb.g, rgb.b, rgb.c);
+    PRINT("H=%d S=%d L=%d\r\n", hsl.h, hsl.s, hsl.l);
+}
+
+void AHT10_Test(void)
+{
+    int32_t temp;
+    int32_t humi;
+    AHT_Measure();
+    ATH_Read(&temp, &humi);
+    PRINT("Temperature =%d Humidity=%d\r\n", temp, humi);
+}
+
+void AS5600_Test(void)
+{
+    PRINT("magnet=%d\r\n", detect_magnet());
+    PRINT("angle=%d\r\n", get_angle());
+    PRINT("agc=%d\r\n", get_agc());
+}
+
+void BH1750_Test(void)
+{
+    PRINT("light=%d\r\n", BH1750_Read_Measure());
+}

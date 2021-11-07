@@ -3,7 +3,6 @@
 /* PB10 SCL PB11 SDA */
 #include "delay.h"
 #include "stdbool.h"
-#include "sys.h"
 
 #define AS_IN()                                                                                                        \
     {                                                                                                                  \
