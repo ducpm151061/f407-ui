@@ -44,8 +44,10 @@
 #include "sdio_sdcard.h"
 #include "tcs34725.h"
 #include "text.h"
-
 #include "ws_AT45DBXX.h"
+
+#include "usb_vcp.h"
+
 void Ctp_Test(void);
 void W25Q64_Test(void);
 void AT24C02_Test(void);

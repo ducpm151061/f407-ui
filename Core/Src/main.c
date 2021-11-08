@@ -5,7 +5,6 @@
 #include "ui_test.h"
 
 static __IO uint32_t system_ticks;
-
 void SysTick_Handler(void);
 
 static void InitOS();
@@ -47,12 +46,12 @@ int main(void)
     // BH1750_Init();
     RNG_Init();
     Check_SDCard();
+    USB_VCP_Init();
     // my_mem_init(SRAMIN);
     // my_mem_init(SRAMCCM);
     // my_mem_init(SRAMBANK);
     // exfuns_init();
     // AT45DBXX_Init();
-
     // W25Q64_Test();
     // AT24C02_Test();
     // WS_AT45DBXX_Test();
@@ -68,7 +67,7 @@ int main(void)
     while (1)
     {
         lv_timer_handler();
-        delay_ms(1);
+        delay_ms(500);
     }
 }
 

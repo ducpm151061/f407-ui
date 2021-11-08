@@ -79,6 +79,13 @@ C_SOURCES +=Core/Src/as5600.c
 C_SOURCES +=Core/Src/aht10.c 
 C_SOURCES +=Core/Src/bh1750.c 
 C_SOURCES +=Core/Src/tcs34725.c 
+
+C_SOURCES +=Core/Src/usb_bsp.c 
+C_SOURCES +=Core/Src/usb_cdc.c 
+C_SOURCES +=Core/Src/usb_vcp.c 
+C_SOURCES +=Core/Src/usbd_desc.c 
+C_SOURCES +=Core/Src/usbd_usr.c 
+
 # C_SOURCES +=Core/Src/stm32f4xx_it.c 
 C_SOURCES +=Drivers/STM32F4xx_FWLIB/src/misc.c 
 # C_SOURCES +=Drivers/STM32F4xx_FWLIB/src/stm32f4xx_adc.c 
@@ -126,6 +133,15 @@ C_SOURCES += Core/Lib/FATFS/exfuns/exfuns.c
 C_SOURCES += Core/Lib/FATFS/fattester.c
 C_SOURCES += Core/Lib/FATFS/src/diskio.c
 C_SOURCES += Core/Lib/FATFS/src/ff.c
+
+C_SOURCES += Drivers/STM32_USB_Device_Library/Class/cdc/src/usbd_cdc_core.c
+C_SOURCES += Drivers/STM32_USB_Device_Library/Core/src/usbd_core.c
+C_SOURCES += Drivers/STM32_USB_Device_Library/Core/src/usbd_ioreq.c
+C_SOURCES += Drivers/STM32_USB_Device_Library/Core/src/usbd_req.c
+C_SOURCES += Drivers/STM32_USB_OTG_Driver/src/usb_core.c
+C_SOURCES += Drivers/STM32_USB_OTG_Driver/src/usb_dcd_int.c
+C_SOURCES += Drivers/STM32_USB_OTG_Driver/src/usb_dcd.c
+
 
 
 # sources for simulator
@@ -200,7 +216,8 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER \
--DSTM32F40_41xxx
+-DSTM32F40_41xxx \
+-DUSE_USB_OTG_FS
 
 
 # AS includes
@@ -217,11 +234,15 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -I. \
+-Iui \
 -Ilvgl \
--Ilv_drivers \
--Ilv_demos \
 -Idevice \
--Iui
+-Ilv_demos \
+-Ilv_drivers \
+-IDrivers/STM32_USB_OTG_Driver/inc \
+-IDrivers/STM32_USB_Device_Library/Core/inc \
+-IDrivers/STM32_USB_Device_Library/Class/cdc/inc \
+
 
 
 # compile gcc flags
