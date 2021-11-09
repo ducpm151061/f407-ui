@@ -67,7 +67,7 @@ int main(void)
     while (1)
     {
         lv_timer_handler();
-        delay_ms(500);
+        delay_ms(1);
     }
 }
 

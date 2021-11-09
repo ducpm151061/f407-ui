@@ -171,7 +171,7 @@ uint16_t USB_VCP_Gets(char *buffer, uint16_t bufsize);
  * @param  *str: Pointer to string variable
  * @retval USB_VCP_OK
  */
-USB_VCP_Result USB_VCP_Puts(char *str);
+USB_VCP_Result USB_VCP_Puts(const char *str);
 
 /**
  * @brief  Sends array of data to USB VCP
@@ -217,7 +217,13 @@ uint8_t USB_VCP_BufferFull(void);
  */
 uint8_t USB_VCP_FindCharacter(volatile char c);
 
+USB_VCP_Result USB_VCP_itoa(long val, int radix, int len);
+
+USB_VCP_Result USB_VCP_Printf(const char *str, ...);
+
 /* Internal functions */
 extern USB_VCP_Result USB_VCP_AddReceived(uint8_t c);
+
+#define USB_PRINT(...) USB_VCP_Printf(__VA_ARGS__)
 
 #endif

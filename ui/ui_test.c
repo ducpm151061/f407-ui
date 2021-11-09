@@ -301,4 +301,5 @@ static void lv_screen_2(void)
 void lvgl_log_cb(const char *buf)
 {
     PRINT("%s\r", buf);
+    USB_PRINT("%s\r", buf);
 }

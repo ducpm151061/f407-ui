@@ -1,5 +1,6 @@
 #include "usb_vcp.h"
 #include "usbd_usr.h"
+#include <stdarg.h>
 
 /* Private */
 uint8_t USB_VCP_ReceiveBuffer[USB_VCP_RECEIVE_BUFFER_LENGTH];
@@ -109,7 +110,7 @@ USB_VCP_Result USB_VCP_Putc(volatile char c)
     return USB_VCP_OK;
 }
 
-USB_VCP_Result USB_VCP_Puts(char *str)
+USB_VCP_Result USB_VCP_Puts(const char *str)
 {
     while (*str)
     {
@@ -118,6 +119,132 @@ USB_VCP_Result USB_VCP_Puts(char *str)
 
     /* Return OK */
     return USB_VCP_OK;
+}
+
+USB_VCP_Result USB_VCP_itoa(long val, int radix, int len)
+{
+    uint8_t r, sgn = 0, pad = ' ';
+    uint8_t s[20], i = 0;
+    uint32_t v;
+
+    if (radix < 0)
+    {
+        radix = -radix;
+        if (val < 0)
+        {
+            val = -val;
+            sgn = '-';
+        }
+    }
+    v = val;
+    r = radix;
+    if (len < 0)
+    {
+        len = -len;
+        pad = '0';
+    }
+    if (len > 20)
+        return USB_VCP_ERROR;
+    do
+    {
+        uint8_t c = (uint8_t)(v % r);
+        if (c >= 10)
+            c += 7;
+        c += '0';
+        s[i++] = c;
+        v /= r;
+    } while (v);
+    if (sgn)
+        s[i++] = sgn;
+    while (i < len)
+        s[i++] = pad;
+    do
+        USB_VCP_Putc(s[--i]);
+    while (i);
+    return USB_VCP_OK;
+}
+
+USB_VCP_Result USB_VCP_Printf(const char *str, ...)
+{
+    va_list arp;
+    int d, r, w, s, l, i;
+
+    // Check if only string
+    for (i = 0;; i++)
+    {
+        if (str[i] == '%')
+            break;
+        if (str[i] == 0)
+        {
+            USB_VCP_Puts(str);
+            return USB_VCP_OK;
+        }
+    }
+
+    va_start(arp, str);
+
+    while ((d = *str++) != 0)
+    {
+        if (d != '%')
+        {
+            USB_VCP_Putc(d);
+            continue;
+        }
+        d = *str++;
+        w = r = s = l = 0;
+        if (d == '0')
+        {
+            d = *str++;
+            s = 1;
+        }
+        while ((d >= '0') && (d <= '9'))
+        {
+            w += w * 10 + (d - '0');
+            d = *str++;
+        }
+        if (s)
+            w = -w;
+        if (d == 'l')
+        {
+            l = 1;
+            d = *str++;
+        }
+        if (!d)
+            break;
+        if (d == 's')
+        {
+            USB_VCP_Puts(va_arg(arp, char *));
+            continue;
+        }
+        if (d == 'c')
+        {
+            USB_VCP_Putc((char)va_arg(arp, int));
+            continue;
+        }
+        if (d == 'u')
+            r = 10;
+        if (d == 'd')
+            r = -10;
+        if (d == 'X' || d == 'x')
+            r = 16;
+        if (d == 'b')
+            r = 2;
+        if (!r)
+            break;
+        if (l)
+        {
+            USB_VCP_itoa((long)va_arg(arp, long), r, w);
+        }
+        else
+        {
+            if (r > 0)
+                USB_VCP_itoa((unsigned long)va_arg(arp, int), r, w);
+            else
+                USB_VCP_itoa((long)va_arg(arp, int), r, w);
+        }
+    }
+
+    va_end(arp);
 }
 
 USB_VCP_Result USB_VCP_Send(uint8_t *DataArray, uint32_t Length)
@@ -134,7 +261,6 @@ uint16_t USB_VCP_Gets(char *buffer, uint16_t bufsize)
     uint16_t i = 0;
     uint8_t c;
 
-    /* Check for any data on USART */
     if (USB_VCP_BufferEmpty() || (!USB_VCP_FindCharacter('\n') && !USB_VCP_BufferFull()))
     {
         return 0;
