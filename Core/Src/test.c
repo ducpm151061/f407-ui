@@ -4,7 +4,7 @@ u16 ColorTab[5] = {RED, GREEN, BLUE, YELLOW, BRED};
 u16 ColornTab[8] = {RED, MAGENTA, GREEN, DARKBLUE, BLUE, BLACK, LIGHTGREEN};
 const u16 POINT_COLOR_TBL[CTP_MAX_TOUCH] = {RED, GREEN, BLUE, BROWN, GRED};
 
-void Ctp_Test(void)
+static void Ctp_Test(void)
 {
     u8 t = 0;
     u8 i = 0, j = 0;
@@ -58,7 +58,7 @@ void Ctp_Test(void)
     }
 }
 
-void W25Q64_Test()
+static void W25Q64_Test()
 {
     u8 send_test[] = "STM32F407VxT6 SPI TEST";
     u8 rece_buf[sizeof(send_test)];
@@ -68,7 +68,7 @@ void W25Q64_Test()
     PRINT("read data: %s\r\n", rece_buf);
 }
 
-void AT24C02_Test()
+static void AT24C02_Test()
 {
     u8 send_test[] = "STM32F407VxT6 IIC TEST";
     u8 rece_buf[sizeof(send_test)];
@@ -78,14 +78,14 @@ void AT24C02_Test()
     PRINT("read data: %s\r\n", rece_buf);
 }
 
-void WS_AT45DBXX_Test()
+static void WS_AT45DBXX_Test()
 {
     u8 ret[10];
     AT45DBXX_Read_ID(ret);
     PRINT("WS_AT45DBXX ID: %s\r\n", (char *)ret);
 }
 
-void Check_SDCard(void)
+static void Check_SDCard(void)
 {
     while (SD_Init())
     {
@@ -94,7 +94,7 @@ void Check_SDCard(void)
     PRINT("SD_Init() ok!\r\n");
 }
 
-void Check_Font(void)
+static void Check_Font(void)
 {
     u8 key = 0;
     POINT_COLOR = RED;
@@ -153,7 +153,7 @@ static u16 pic_get_tnum(u8 *path)
     return rval;
 }
 
-void Show_Picture(void)
+static void Show_Picture(void)
 {
     u8 res;
     DIR picdir;
@@ -267,7 +267,7 @@ void Show_Picture(void)
     myfree(SRAMIN, picindextbl);
 }
 
-void TCS34725_Test(void)
+static void TCS34725_Test(void)
 {
     COLOR_RGBC rgb;
     COLOR_HSL hsl;
@@ -277,7 +277,7 @@ void TCS34725_Test(void)
     PRINT("H=%d S=%d L=%d\r\n", hsl.h, hsl.s, hsl.l);
 }
 
-void AHT10_Test(void)
+static void AHT10_Test(void)
 {
     int32_t temp;
     int32_t humi;
@@ -286,14 +286,48 @@ void AHT10_Test(void)
     PRINT("Temperature =%d Humidity=%d\r\n", temp, humi);
 }
 
-void AS5600_Test(void)
+static void AS5600_Test(void)
 {
     PRINT("magnet=%d\r\n", detect_magnet());
     PRINT("angle=%d\r\n", get_angle());
     PRINT("agc=%d\r\n", get_agc());
 }
 
-void BH1750_Test(void)
+static void BH1750_Test(void)
 {
     PRINT("light=%d\r\n", BH1750_Read_Measure());
+}
+
+void InitHardware(void)
+{
+
+    LED_Init();
+    // LCD_Init();
+    // TP_Init();
+    KEY_Init();
+    AT24C02_Init();
+    W25Q64_Init();
+    // AS_Init();
+    // AHT_Init();
+    // TCS34725_Init();
+    // BH1750_Init();
+    Check_SDCard();
+    USB_VCP_Init();
+    // AT45DBXX_Init();
+    // my_mem_init(SRAMIN);
+    // my_mem_init(SRAMCCM);
+    // my_mem_init(SRAMBANK);
+    // exfuns_init();
+}
+
+void test()
+{
+    Ctp_Test();
+    W25Q64_Test();
+    AT24C02_Test();
+    WS_AT45DBXX_Test();
+    // TCS34725_Test();
+    // AHT10_Test();
+    // AS5600_Test();
+    // BH1750_Test();
 }

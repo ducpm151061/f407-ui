@@ -9,6 +9,7 @@ static lv_obj_t *btn1;
 static lv_obj_t *btn2;
 static lv_obj_t *btn3;
 static lv_obj_t *label_add;
+static void lv_test(void);
 
 static void screen_next(void);
 static void lv_screen_2(void);
@@ -131,7 +132,7 @@ static void add_event_handler(lv_event_t *e)
     }
 }
 
-void lv_test(void)
+static void lv_test(void)
 {
     lv_obj_t *scr = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr, lv_color_hex(0xffffff), 0);
@@ -296,6 +297,16 @@ static void lv_screen_2(void)
     lv_obj_align_to(slider, chart, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
 
     lv_scr_load_anim(screen2, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 300, 0, true);
+}
+
+void ui()
+{
+    // lv_test();
+    // lv_demo_music();
+    lv_demo_stress();
+    // lv_demo_widgets();
+    // lv_demo_benchmark();
+    // lv_demo_keypad_encoder();
 }
 
 void lvgl_log_cb(const char *buf)
