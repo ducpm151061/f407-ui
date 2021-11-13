@@ -22,4 +22,4 @@ void RTP_Adjust(void);
 u8 RTP_Init(void);
 void RTP_Adj_Info_Show(u16 x0, u16 y0, u16 x1, u16 y1, u16 x2, u16 y2, u16 x3, u16 y3, u16 fac);
 
-#endif
+#endif /* __RTP_H__ */

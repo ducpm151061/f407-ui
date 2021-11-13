@@ -27,4 +27,4 @@ typedef struct
 extern _m_tp_dev tp_dev;
 
 u8 TP_Init(void);
-#endif
+#endif /* __TOUCH_H__ */

@@ -1,4 +1,5 @@
 #include "aht10.h"
+#include "delay.h"
 
 static void AHT_IIC_Init(void)
 {
@@ -156,7 +157,7 @@ void ATH_Read(int32_t *temperature, int32_t *humidity)
 {
     volatile u8 i;
     u32 temp = 0, hum = 0;
-    u8 value[5];
+    u8 value[5]={};
     AHT_IIC_Start();
     AHT_IIC_Send_Byte(0x71);
     AHT_IIC_Wait_Ack();

@@ -29,4 +29,4 @@ void EscButton(u16 xstart, u16 ystart, u8 xend, u16 yend);
 void SetButton(u8 xstart, u16 ystart, u8 xend, u16 yend);
 void Draw_DirectButton(u16 xstart, u16 ystart);
 void Draw_Window(u16 xstart, u16 ystart, u16 xend, u16 yend, char *caption);
-#endif
+#endif /* __GUI_H__ */

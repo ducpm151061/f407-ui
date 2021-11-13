@@ -60,4 +60,4 @@ void Check_SDCard(void);
 void Check_Font(void);
 void Show_Picture(void);
 
-#endif
+#endif /* __TEST_H__ */

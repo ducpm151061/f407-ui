@@ -1,7 +1,7 @@
 #ifndef __RANDOM_H__
 #define __RANDOM_H__
 
-#include "delay.h"
+#include "sys.h"
 
 // initialization
 u8 RNG_Init(void);

@@ -1,7 +1,7 @@
 
 #ifndef __LED_H
 #define __LED_H
-#include "delay.h"
+#include "sys.h"
 #define LED_IO_DEF 0
 
 #if LED_IO_DEF == 0
@@ -29,4 +29,4 @@
 
 void LED_Init(void);
 void LED_Toggle(void);
-#endif
+#endif /* __LED_H */

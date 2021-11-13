@@ -1,32 +1,3 @@
-/**
- * @author  Tilen MAJERLE
- * @email   tilen@majerle.eu
- * @website http://stm32f4-discovery.net
- * @link    http://stm32f4-discovery.net/2014/08/library-24-virtual-com-port-vcp-stm32f4xx/
- * @version v1.2
- * @ide     Keil uVision
- * @license GNU GPL v3
- * @brief   USB Virtual COM Port for STM32F4xx devices
- *
-@verbatim
-   ----------------------------------------------------------------------
-    Copyright (C) Tilen MAJERLE, 2015
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-   ----------------------------------------------------------------------
-@endverbatim
- */
 #ifndef USB_VCP_H
 #define USB_VCP_H 120
 
@@ -200,7 +171,7 @@ USB_VCP_Result USB_VCP_GetStatus(void);
 uint8_t USB_VCP_BufferEmpty(void);
 
 /**
- * @brief  Checks if receive buffer is fukk
+ * @brief  Checks if receive buffer is full
  * @param  None
  * @retval Buffer status:
  *            - 0: Buffer is not full

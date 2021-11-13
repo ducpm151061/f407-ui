@@ -3,7 +3,7 @@
 /*****************************************************************************
  * @name       :void SPI1_Init(void)
  * @date       :2020-05-08
- * @function   :Initialize the hardware SPI2
+ * @function   :Initialize the hardware SPI1
  * @parameters :None
  * @retvalue   :None
  ******************************************************************************/

@@ -1,6 +1,6 @@
 #ifndef __CTPIIC_H
 #define __CTPIIC_H
-#include "delay.h"
+#include "sys.h"
 
 #define CTP_SDA_IN()                                                                                                   \
     {                                                                                                                  \
@@ -26,4 +26,4 @@ u8 CTP_IIC_Wait_Ack(void);
 void CTP_IIC_Ack(void);
 void CTP_IIC_NAck(void);
 
-#endif
+#endif /* __CTPIIC_H */

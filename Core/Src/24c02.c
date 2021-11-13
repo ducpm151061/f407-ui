@@ -10,7 +10,7 @@
  ******************************************************************************/
 void AT24C02_Init(void)
 {
-    IIC_Init(); 
+    IIC_Init();
 }
 
 /*****************************************************************************
@@ -28,7 +28,7 @@ u8 AT24C02_ReadOneByte(u16 ReadAddr)
     {
         IIC_Send_Byte(0XA0);
         IIC_Wait_Ack();
-        IIC_Send_Byte(ReadAddr >> 8); 
+        IIC_Send_Byte(ReadAddr >> 8);
     }
     else
     {
@@ -38,10 +38,10 @@ u8 AT24C02_ReadOneByte(u16 ReadAddr)
     IIC_Send_Byte(ReadAddr % 256);
     IIC_Wait_Ack();
     IIC_Start();
-    IIC_Send_Byte(0XA1); 
+    IIC_Send_Byte(0XA1);
     IIC_Wait_Ack();
     temp = IIC_Read_Byte(0);
-    IIC_Stop(); 
+    IIC_Stop();
     return temp;
 }
 
@@ -58,20 +58,20 @@ void AT24C02_WriteOneByte(u16 WriteAddr, u8 DataToWrite)
     IIC_Start();
     if (EE_TYPE > AT24C16)
     {
-        IIC_Send_Byte(0XA0); 
+        IIC_Send_Byte(0XA0);
         IIC_Wait_Ack();
-        IIC_Send_Byte(WriteAddr >> 8); 
+        IIC_Send_Byte(WriteAddr >> 8);
     }
     else
     {
-        IIC_Send_Byte(0XA0 + ((WriteAddr / 256) << 1)); 
+        IIC_Send_Byte(0XA0 + ((WriteAddr / 256) << 1));
     }
     IIC_Wait_Ack();
-    IIC_Send_Byte(WriteAddr % 256); 
+    IIC_Send_Byte(WriteAddr % 256);
     IIC_Wait_Ack();
     IIC_Send_Byte(DataToWrite);
     IIC_Wait_Ack();
-    IIC_Stop(); 
+    IIC_Stop();
     delay_ms(10);
 }
 
@@ -134,7 +134,7 @@ u8 AT24C02_Check(void)
     {
         return 0;
     }
-    else 
+    else
     {
         AT24C02_WriteOneByte(255, 0X55);
         temp = AT24C02_ReadOneByte(255);

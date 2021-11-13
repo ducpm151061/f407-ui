@@ -52,4 +52,8 @@
 #define PIout(n) BIT_ADDR(GPIOI_ODR_Addr, n)
 #define PIin(n) BIT_ADDR(GPIOI_IDR_Addr, n)
 
-#endif
+void WFI_SET(void);
+void INTX_DISABLE(void);
+void INTX_ENABLE(void);
+void MSR_MSP(u32 addr);
+#endif /* __SYS_H */

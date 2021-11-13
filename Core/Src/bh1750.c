@@ -1,4 +1,5 @@
 #include "bh1750.h"
+#include "delay.h"
 
 static void BH_IIC_Init(void)
 {

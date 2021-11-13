@@ -3,7 +3,6 @@
 #include "ff.h"
 #include "sys.h"
 
-
 #define GIF_USE_MALLOC 1
 
 #define LCD_MAX_LOG_COLORS 256
@@ -88,4 +87,4 @@ u8 gif_drawimage(FIL *gfile, gif89a *gif, u16 x0, u16 y0);
 
 u8 gif_decode(const u8 *filename, u16 x, u16 y, u16 width, u16 height);
 void gif_quit(void);
-#endif
+#endif /* __GIF_H__ */

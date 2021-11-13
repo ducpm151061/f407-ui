@@ -1,6 +1,5 @@
 
 #include "exti.h"
-#include "sys.h"
 
 u8 touch_flag = 0;
 

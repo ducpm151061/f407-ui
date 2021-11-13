@@ -2,5 +2,5 @@
 #define __DAC_H
 #include "sys.h"
 
-void DAC1_Init(void); 
-#endif
+void DAC1_Init(void);
+#endif /* __DAC_H */

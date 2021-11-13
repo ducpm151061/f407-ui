@@ -1,7 +1,7 @@
 #ifndef __BH1750_H
 #define __BH1750_H
 
-#include "delay.h"
+#include "sys.h"
 
 #define BH_SDA_IN()                                                                                                    \
     {                                                                                                                  \
@@ -46,6 +46,6 @@
 
 void BH1750_Init(void);
 uint16_t BH1750_Read_Measure(void);
-float Light_Intensity(void); // Reading the value of light intensity
+float Light_Intensity(void);
 
 #endif /* __BH1750_H */

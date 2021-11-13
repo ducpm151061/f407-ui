@@ -1,6 +1,6 @@
 #ifndef __FT5426_H
 #define __FT5426_H
-#include "delay.h"
+#include "sys.h"
 
 #define FT_RST PCout(13)
 
@@ -26,4 +26,4 @@ void FT5426_RD_Reg(u16 reg, u8 *buf, u8 len);
 u8 FT5426_Init(void);
 u8 FT5426_Scan(void);
 
-#endif
+#endif /* __FT5426_H */

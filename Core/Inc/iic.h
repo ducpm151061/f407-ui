@@ -1,6 +1,6 @@
 #ifndef __IIC_H
 #define __IIC_H
-#include "delay.h"
+#include "sys.h"
 
 #define SDA_IN()                                                                                                       \
     {                                                                                                                  \
@@ -26,4 +26,4 @@ u8 IIC_Wait_Ack(void);
 void IIC_Ack(void);
 void IIC_NAck(void);
 
-#endif
+#endif /* __IIC_H */

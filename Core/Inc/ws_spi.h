@@ -2,7 +2,7 @@
 #define __WS_SPI_H
 #include "stdint.h"
 #include "stdio.h"
-#include "stm32f4xx.h"
+#include "sys.h"
 #include "usart.h"
 void SPI2_Configuration(void);
 void SPI2_Send_byte(u16 data);

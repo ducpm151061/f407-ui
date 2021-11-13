@@ -1,4 +1,5 @@
 #include "lcd.h"
+#include "delay.h"
 
 _lcd_dev lcddev;
 
@@ -234,7 +235,7 @@ void LCD_GPIOInit(void)
     FSMC_NORSRAMTimingInitTypeDef readWriteTiming;
     FSMC_NORSRAMTimingInitTypeDef writeTiming;
 
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE, ENABLE); 
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE, ENABLE);
     RCC_AHB3PeriphClockCmd(RCC_AHB3Periph_FSMC, ENABLE);
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;

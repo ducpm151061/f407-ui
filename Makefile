@@ -39,6 +39,7 @@ SIMULATOR_BUILD_DIR = $(BUILD_DIR)/simulator
 # C sources
 C_SOURCES =  
 C_SOURCES +=Core/Src/main.c 
+C_SOURCES +=Core/Src/sys.c 
 C_SOURCES +=Core/Src/delay.c 
 C_SOURCES +=Core/Src/24c02.c 
 C_SOURCES +=Core/Src/ctpiic.c 

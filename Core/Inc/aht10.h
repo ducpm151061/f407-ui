@@ -1,6 +1,6 @@
 #ifndef __AHT10_H
 #define __AHT10_H
-#include "delay.h"
+#include "sys.h"
 /* PB10 SCL PB11 SDA */
 
 #define AHTX0_I2CADDR_DEFAULT (0x38 << 1) ///< AHT default i2c address

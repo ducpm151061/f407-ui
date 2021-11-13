@@ -1,6 +1,7 @@
 #ifndef __SDIO_SDCARD_H
 #define __SDIO_SDCARD_H
 #include "stm32f4xx.h"
+#include "sys.h"
 
 #define SDIO_FLAG_CCRCFAIL ((uint32_t)0x00000001)
 #define SDIO_FLAG_DCRCFAIL ((uint32_t)0x00000002)
@@ -160,7 +161,6 @@ typedef struct
     u8 CardType;
 } SD_CardInfo;
 extern SD_CardInfo SDCardInfo;
-
 
 #define SD_CMD_GO_IDLE_STATE ((u8)0)
 #define SD_CMD_SEND_OP_COND ((u8)1)
@@ -333,9 +333,8 @@ SD_Error SD_WriteMultiBlocks(u8 *buf, long long addr, u16 blksize, u32 nblks);
 SD_Error SD_ProcessIRQSrc(void);
 
 void SD_DMA_Config(u32 *mbuf, u32 bufsize, u32 dir);
-// void SD_DMA_Config(u32*mbuf,u32 bufsize,u8 dir);
 
 u8 SD_ReadDisk(u8 *buf, u32 sector, u8 cnt);
 u8 SD_WriteDisk(u8 *buf, u32 sector, u8 cnt);
 
-#endif
+#endif /* __SDIO_SDCARD_H */

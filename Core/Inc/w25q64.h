@@ -1,11 +1,12 @@
 #ifndef __W25Q64_H
 #define __W25Q64_H
 #include "sys.h"
-// W25Q80  ID  0XEF13
-// W25Q16  ID  0XEF14
-// W25Q32  ID  0XEF15
-// W25Q64  ID  0XEF16
-// W25Q128 ID  0XEF17
+/* W25Q80  ID  0XEF13
+W25Q16  ID  0XEF14
+W25Q32  ID  0XEF15
+W25Q64  ID  0XEF16
+W25Q128 ID  0XEF17
+ */
 #define W25Q80 0XEF13
 #define W25Q16 0XEF14
 #define W25Q32 0XEF15
@@ -48,4 +49,4 @@ void W25Q64_Erase_Sector(u32 Dst_Addr);
 void W25Q64_Wait_Busy(void);
 void W25Q64_PowerDown(void);
 void W25Q64_WAKEUP(void);
-#endif
+#endif /* __W25Q64_H */

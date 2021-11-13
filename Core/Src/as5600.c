@@ -1,4 +1,5 @@
 #include "as5600.h"
+#include "delay.h"
 
 u16 _rawStartAngle = 0;
 u16 _zPosition = 0;

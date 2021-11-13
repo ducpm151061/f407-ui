@@ -245,6 +245,7 @@ USB_VCP_Result USB_VCP_Printf(const char *str, ...)
     }
 
     va_end(arp);
+    return USB_VCP_OK;
 }
 
 USB_VCP_Result USB_VCP_Send(uint8_t *DataArray, uint32_t Length)

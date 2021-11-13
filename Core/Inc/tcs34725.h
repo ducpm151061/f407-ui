@@ -108,4 +108,4 @@ u16 TCS34725_GetChannelData(u8 reg);
 u8 TCS34725_GetRawData(COLOR_RGBC *rgbc);
 void RGBtoHSL(COLOR_RGBC *Rgb, COLOR_HSL *Hsl);
 
-#endif
+#endif /* __TCS34725_H__ */

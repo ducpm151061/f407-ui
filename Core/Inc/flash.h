@@ -21,4 +21,4 @@ u32 FLASH_ReadWord(u32 faddr);
 void FLASH_Write(u32 WriteAddr, u32 *pBuffer, u32 NumToWrite);
 void FLASH_Read(u32 ReadAddr, u32 *pBuffer, u32 NumToRead);
 
-#endif
+#endif /* __FLASH_H__ */

@@ -55,6 +55,7 @@ void Debug_Init(u32 bound)
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
 }
+
 /* Method 1 using usart send */
 void Debug_Send(const char *str)
 {
@@ -65,6 +66,7 @@ void Debug_Send(const char *str)
         USART_SendData(DEBUG_UART, *str++);
     }
 }
+
 /* Method 2 using itoa */
 void Debug_Printf(char *Data, ...)
 {

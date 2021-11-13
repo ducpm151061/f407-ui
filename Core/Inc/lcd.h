@@ -1,7 +1,7 @@
 #ifndef __LCD_H
 #define __LCD_H
-#include "delay.h"
 #include "stdlib.h"
+#include "sys.h"
 #include "usart.h"
 
 typedef struct
@@ -102,4 +102,4 @@ void LCD_PWM_BackLightSet(u8 pwm); // only for 0x1963
 #define SSD_VT (SSD_VER_RESOLUTION + SSD_VER_BACK_PORCH + SSD_VER_FRONT_PORCH)
 #define SSD_VPS (SSD_VER_BACK_PORCH)
 
-#endif
+#endif /* __LCD_H */

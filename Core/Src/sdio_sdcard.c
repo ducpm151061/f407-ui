@@ -1,6 +1,5 @@
 #include "sdio_sdcard.h"
 #include "string.h"
-#include "sys.h"
 #include "usart.h"
 
 SDIO_InitTypeDef SDIO_InitStructure;
@@ -1284,7 +1283,7 @@ SD_Error CmdError(void)
 SD_Error CmdResp7Error(void)
 {
     SD_Error errorstatus = SD_OK;
-    u32 status;
+    u32 status = 0;
     u32 timeout = SDIO_CMD0TIMEOUT;
     while (timeout--)
     {

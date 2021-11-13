@@ -22,4 +22,4 @@ u32 fupd_prog(u16 x, u16 y, u8 size, u32 fsize, u32 pos);
 u8 updata_fontx(u16 x, u16 y, u8 size, u8 *fxpath, u8 fx);
 u8 update_font(u16 x, u16 y, u8 size, u8 *src);
 u8 font_init(void);
-#endif
+#endif /* __FONTUPD_H__ */

@@ -1,4 +1,3 @@
-
 #include "touch.h"
 #include "ctpiic.h"
 #include "ft5426.h"

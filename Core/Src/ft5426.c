@@ -1,5 +1,6 @@
 #include "ft5426.h"
 #include "ctpiic.h"
+#include "delay.h"
 #include "exti.h"
 #include "lcd.h"
 #include "string.h"

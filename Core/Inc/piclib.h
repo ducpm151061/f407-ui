@@ -57,4 +57,4 @@ u8 is_element_ok(u16 x, u16 y, u8 chg);
 u8 ai_load_picfile(const u8 *filename, u16 x, u16 y, u16 width, u16 height, u8 fast);
 void *pic_memalloc(u32 size);
 void pic_memfree(void *mf);
-#endif
+#endif /* __PICLIB_H */

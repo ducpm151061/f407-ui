@@ -1,5 +1,5 @@
-#ifndef __GT911_DRIVER_H
-#define __GT911_DRIVER_H
+#ifndef __GT911_H
+#define __GT911_H
 
 #include "sys.h"
 
@@ -42,4 +42,4 @@ u8 Touch_Get_Count(void);
 u8 GT911_Scan(void);
 void GT911_Position(int16_t *Touch_X_Position, int16_t *Touch_Y_Position);
 
-#endif
+#endif /* __GT911_H */

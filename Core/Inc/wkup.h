@@ -7,4 +7,4 @@
 u8 Check_WKUP(void);
 void WKUP_Init(void);
 void Sys_Enter_Standby(void);
-#endif
+#endif /* __WKUP_H */

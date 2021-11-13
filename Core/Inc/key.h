@@ -1,6 +1,6 @@
 #ifndef __KEY_H
 #define __KEY_H
-#include "delay.h"
+#include "sys.h"
 
 #define KEY_IO_DEF 0
 
@@ -21,4 +21,4 @@
 void KEY_Init(void);
 u8 KEY_Scan(u8);
 
-#endif
+#endif /* __KEY_H */

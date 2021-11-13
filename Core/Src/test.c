@@ -1,19 +1,9 @@
 #include "test.h"
 
-//========================variable==========================//
 u16 ColorTab[5] = {RED, GREEN, BLUE, YELLOW, BRED};
 u16 ColornTab[8] = {RED, MAGENTA, GREEN, DARKBLUE, BLUE, BLACK, LIGHTGREEN};
-//=====================end of variable======================//
-
 const u16 POINT_COLOR_TBL[CTP_MAX_TOUCH] = {RED, GREEN, BLUE, BROWN, GRED};
 
-/*****************************************************************************
- * @name       :void Ctp_Test(void)
- * @date       :2020-05-13
- * @function   :Capacitive touch screen test
- * @parameters :None
- * @retvalue   :None
- ******************************************************************************/
 void Ctp_Test(void)
 {
     u8 t = 0;
