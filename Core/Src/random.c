@@ -24,7 +24,8 @@ u8 RNG_Init(void)
 u32 RNG_Get_RandomNum(void)
 {
     while (RNG_GetFlagStatus(RNG_FLAG_DRDY) == RESET)
-        return RNG_GetRandomNumber();
+        ;
+    return RNG_GetRandomNumber();
 }
 
 // Get random numbers in the range

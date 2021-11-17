@@ -41,6 +41,7 @@ int main(void)
     InitOS();
     InitSoftware();
     InitHardware();
+    test();
     lv_port_disp_init();
     lv_port_indev_init(keyboard_group);
     ui();

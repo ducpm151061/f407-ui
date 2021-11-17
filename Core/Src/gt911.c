@@ -268,15 +268,15 @@ u8 GT911_Scan(void)
             tp_dev.sta = temp | TP_PRES_DOWN | TP_CATH_PRES;
             tp_dev.x[4] = tp_dev.x[0];
             tp_dev.y[4] = tp_dev.y[0];
-            // for (i = 0; i < CTP_MAX_TOUCH; i++)
-            // {
-            //     if (tp_dev.sta & (1 << i))
-            //     {
-            tp_dev.x[0] = ((u16)buf[3] << 8) + buf[2];
-            tp_dev.y[0] = ((u16)buf[5] << 8) + buf[4];
-            // GT9XX_ReadData(TPX[i],4,buf);
-            //     }
-            // }
+            for (i = 0; i < CTP_MAX_TOUCH; i++)
+            {
+                if (tp_dev.sta & (1 << i))
+                {
+                    tp_dev.x[0] = ((u16)buf[3] << 8) + buf[2];
+                    tp_dev.y[0] = ((u16)buf[5] << 8) + buf[4];
+                    GT9XX_ReadData(TPX[i], 4, buf);
+                }
+            }
             res = 1;
             if (tp_dev.x[0] > lcddev.width || tp_dev.y[0] > lcddev.height)
             {

@@ -40,32 +40,32 @@ typedef struct
 #define LCD_BASE ((u32)(0x60000000 | 0x0001FFFE))
 #define LCD ((LCD_TypeDef *)LCD_BASE)
 
-#define WHITE 0xFFFF
-#define BLACK 0x0000
-#define BLUE 0x001F
-#define BRED 0xF81F
-#define GRED 0xFFE0
-#define GBLUE 0x07FF
-#define RED 0xF800
+#define WHITE (u16)0xFFFF
+#define BLACK (u16)0x0000
+#define BLUE (u16)0x001F
+#define BRED (u16)0xF81F
+#define GRED (u16)0xFFE0
+#define GBLUE (u16)0x07FF
+#define RED (u16)0xF800
 #define MAGENTA 0xF81F
-#define GREEN 0x07E0
-#define CYAN 0x7FFF
-#define YELLOW 0xFFE0
-#define BROWN 0xBC40
-#define BRRED 0xFC07
-#define GRAY 0x8430
+#define GREEN (u16)0x07E0
+#define CYAN (u16)0x7FFF
+#define YELLOW (u16)0xFFE0
+#define BROWN (u16)0xBC40
+#define BRRED (u16)0xFC07
+#define GRAY (u16)0x8430
 
-#define DARKBLUE 0x01CF
-#define LIGHTBLUE 0x7D7C
-#define GRAYBLUE 0x5458
+#define DARKBLUE (u16)0x01CF
+#define LIGHTBLUE (u16)0x7D7C
+#define GRAYBLUE (u16)0x5458
 
-#define LIGHTGREEN 0x841F
-#define LIGHTGRAY 0xEF5B
-#define LGRAY 0xC618
-#define DARKGRAY 0x8410
+#define LIGHTGREEN (u16)0x841F
+#define LIGHTGRAY (u16)0xEF5B
+#define LGRAY (u16)0xC618
+#define DARKGRAY (u16)0x8410
 
-#define LGRAYBLUE 0xA651
-#define LBBLUE 0x2B12
+#define LGRAYBLUE (u16)0xA651
+#define LBBLUE (u16)0x2B12
 
 void LCD_Init(void);
 u16 LCD_read(void);

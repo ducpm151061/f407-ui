@@ -6,7 +6,7 @@
 
 #define SCAN_TYPE 1
 
-#define CTP_MAX_TOUCH 1
+#define CTP_MAX_TOUCH 5
 
 #define TP_PRES_DOWN 0x80
 #define TP_CATH_PRES 0x40

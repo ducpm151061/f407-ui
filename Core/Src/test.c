@@ -8,7 +8,7 @@ static void Ctp_Test(void)
 {
     u8 t = 0;
     u8 i = 0, j = 0;
-    u16 lastpos[5][2];
+    u16 lastpos[5][2] = {0};
     LCD_ShowString(0, 0, 16, "RST", 1);
     POINT_COLOR = RED;
     while (1)
@@ -322,10 +322,10 @@ void InitHardware(void)
 
 void test()
 {
-    Ctp_Test();
-    W25Q64_Test();
-    AT24C02_Test();
-    WS_AT45DBXX_Test();
+    // Ctp_Test();
+    // W25Q64_Test();
+    // AT24C02_Test();
+    // WS_AT45DBXX_Test();
     // TCS34725_Test();
     // AHT10_Test();
     // AS5600_Test();
