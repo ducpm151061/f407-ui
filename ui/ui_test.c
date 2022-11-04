@@ -1,5 +1,6 @@
 #include "ui_test.h"
 #include "../lvgl/lvgl.h"
+#include "lvgl/demos/lv_demos.h"
 
 static lv_obj_t *screen;
 static lv_obj_t *chart;
