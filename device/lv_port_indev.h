@@ -1,6 +1,6 @@
 
 /**
- * @file lv_port_indev_templ.h
+ * @file lv_port_indev.h
  *
  */
 
@@ -11,32 +11,34 @@
 #define LV_PORT_INDEV_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /*********************
  *      INCLUDES
  *********************/
-#include "../lvgl/lvgl.h"
+#if defined(LV_LVGL_H_INCLUDE_SIMPLE)
+#include "lvgl.h"
+#else
+#include "lvgl/lvgl.h"
+#endif
 
-    /*********************
-     *      DEFINES
-     *********************/
+/*********************
+ *      DEFINES
+ *********************/
 
-    /**********************
-     *      TYPEDEFS
-     **********************/
+/**********************
+ *      TYPEDEFS
+ **********************/
 
-    /**********************
-     * GLOBAL PROTOTYPES
-     **********************/
+/**********************
+ * GLOBAL PROTOTYPES
+ **********************/
+void lv_port_indev_init(void);
 
-    /**********************
-     *      MACROS
-     **********************/
-
-    void lv_port_indev_init(lv_group_t *keyboard_group);
+/**********************
+ *      MACROS
+ **********************/
 
 #ifdef __cplusplus
 } /*extern "C"*/

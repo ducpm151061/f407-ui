@@ -43,7 +43,7 @@ int main(void)
     InitHardware();
     test();
     lv_port_disp_init();
-    lv_port_indev_init(keyboard_group);
+    lv_port_indev_init();
     ui();
     while (1)
     {
