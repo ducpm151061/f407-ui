@@ -1,11 +1,15 @@
-#include "lv_port_disp.h"
-#include "lv_port_indev.h"
-#include "lvgl.h"
+#include "../platform.h"
 #include "stdio.h"
-#include "ui_test.h"
+#include "test.h"
 
 static __IO u32 system_ticks;
 void SysTick_Handler(void);
+
+static void lvgl_log_cb(const char *buf)
+{
+    PRINT("%s\r", buf);
+    USB_PRINT("%s\r", buf);
+}
 
 static void InitOS();
 static void InitSoftware();
@@ -31,27 +35,21 @@ inline static void on_tick(u32 period)
     lv_tick_inc(period);
 }
 
-int main(void)
+void system_init(lv_group_t *keyboard_group)
 {
-    lv_init();
+#if DEBUG
     lv_log_register_print_cb(lvgl_log_cb);
-    lv_group_t *keyboard_group = lv_group_create();
+#endif
     SystemCoreClockUpdate();
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     InitOS();
     InitSoftware();
     InitHardware();
-    test();
     lv_port_disp_init();
     lv_port_indev_init(keyboard_group);
-    ui();
-    while (1)
-    {
-        lv_timer_handler();
-        delay_ms(1);
-    }
-}
 
+    test();
+}
 void SysTick_Handler(void)
 {
     system_ticks++;
