@@ -355,8 +355,10 @@ clean:
 # flash
 #######################################
 flash: all
+# St-Link
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "transport select hla_swd" -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
-  
+# CMSIS-DAP
+	openocd -f interface/cmsis-dap.cfg -f target/stm32f4x.cfg -c "transport select swd" -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
 #######################################
 # dependencies
 #######################################
