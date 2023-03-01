@@ -38,7 +38,7 @@ SIMULATOR_BUILD_DIR = $(BUILD_DIR)/simulator
 ######################################
 # C sources
 C_SOURCES =  
-C_SOURCES +=Core/Src/main.c 
+C_SOURCES +=device/device.c
 C_SOURCES +=Core/Src/sys.c 
 C_SOURCES +=Core/Src/delay.c 
 C_SOURCES +=Core/Src/24c02.c 
@@ -154,6 +154,7 @@ SHARED_SOURCES += \
 ui_test.c  \
 ui/simpson.c \
 ui/leg.c \
+main.c \
 
 
 # LVGL includes
@@ -243,6 +244,13 @@ C_INCLUDES =  \
 -IDrivers/STM32_USB_Device_Library/Core/inc \
 -IDrivers/STM32_USB_Device_Library/Class/cdc/inc \
 
+S_INCLUDES= \
+-I. \
+-Iui \
+-Ilvgl \
+-Idevice \
+-Ilv_demos \
+-Ilv_drivers \
 
 
 # compile gcc flags
@@ -297,14 +305,11 @@ S_OBJECTS = $(patsubst %,$(SIMULATOR_BUILD_DIR)/%,$(S_SRCS:.c=.o))
 
 S_CC = gcc
 S_CFLAGS = 
-S_DEFINES = -D SIMULATOR=1 -D LV_LVGL_H_INCLUDE_SIMPLE=0 -D LV_BUILD_TEST=0 -D STM32F40_41xxx -D USE_STDPERIPH_DRIVER
+S_DEFINES = -D SIMULATOR=1 -D LV_LVGL_H_INCLUDE_SIMPLE=1 -D LV_BUILD_TEST=0 -D STM32F40_41xxx -D USE_STDPERIPH_DRIVER -D USE_USB_OTG_FS
 
 S_COMPILE = $(S_CC) $(S_CFLAGS) $(C_INCLUDES) $(S_INCLUDES) $(S_DEFINES)
 S_BIN = $(SIMULATOR_BUILD_DIR)/$(TARGET)
 S_LDLIBS = -lSDL2 -lm
-
-
-
 
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
@@ -326,11 +331,6 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir $@		
 
-
-
-
-
-
 simulator: $(S_BIN)
 	$(info simulator build completed, try to run...)
 	$(SIMULATOR_BUILD_DIR)/$(TARGET)
@@ -342,12 +342,6 @@ $(SIMULATOR_BUILD_DIR)/%.o: %.c
 $(S_BIN): $(S_OBJECTS)	
 	@mkdir -p $(SIMULATOR_BUILD_DIR)
 	$(S_CC) -o $(S_BIN) $(S_OBJECTS) $(S_LDFLAGS) ${S_LDLIBS}
-
-
-
-
-
-
 
 #######################################
 # clean up
@@ -361,8 +355,10 @@ clean:
 # flash
 #######################################
 flash: all
+# St-Link
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "transport select hla_swd" -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
-  
+# CMSIS-DAP
+	openocd -f interface/cmsis-dap.cfg -f target/stm32f4x.cfg -c "transport select swd" -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
 #######################################
 # dependencies
 #######################################

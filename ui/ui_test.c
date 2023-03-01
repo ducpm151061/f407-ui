@@ -309,9 +309,3 @@ void ui()
     // lv_demo_benchmark();
     // lv_demo_keypad_encoder();
 }
-
-void lvgl_log_cb(const char *buf)
-{
-    PRINT("%s\r", buf);
-    USB_PRINT("%s\r", buf);
-}
