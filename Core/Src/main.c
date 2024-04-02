@@ -1,6 +1,5 @@
-#include "lv_port_disp.h"
-#include "lv_port_indev.h"
-#include "lvgl.h"
+#include "../../lv_conf.h"
+#include "../../lvgl/lvgl.h"
 #include "stdio.h"
 #include "ui_test.h"
 
@@ -9,6 +8,7 @@ void SysTick_Handler(void);
 
 static void InitOS();
 static void InitSoftware();
+static void lvgl_log_cb(lv_log_level_t level, const char *buf);
 static void InitOS()
 {
     if (SysTick_Config(SystemCoreClock / 1000))
@@ -29,6 +29,11 @@ static void InitSoftware()
 inline static void on_tick(u32 period)
 {
     lv_tick_inc(period);
+}
+static void lvgl_log_cb(lv_log_level_t level, const char *buf)
+{
+    PRINT("%s\r", buf);
+    USB_PRINT("%s\r", buf);
 }
 
 int main(void)

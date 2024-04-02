@@ -13,7 +13,7 @@
 #include "gt911.h"
 #include "key.h"
 #include "led.h"
-#include "lvgl.h"
+#include "../lvgl/lvgl.h"
 #include "touch.h"
 #include "usart.h"
 

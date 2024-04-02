@@ -13,7 +13,7 @@
 ######################################
 # target
 ######################################
-TARGET = touch
+TARGET = out
 MAKEFLAGS := --jobs=$(shell nproc)
 
 
@@ -31,6 +31,7 @@ OPT = -Os
 #######################################
 # Build path
 BUILD_DIR = build
+DEVICE_BUILD_DIR = $(BUILD_DIR)/device
 SIMULATOR_SRC_PATH=simulator
 SIMULATOR_BUILD_DIR = $(BUILD_DIR)/simulator
 ######################################
@@ -72,7 +73,7 @@ C_SOURCES +=Core/Src/fontupd.c
 C_SOURCES +=Core/Src/bmp.c 
 C_SOURCES +=Core/Src/text.c 
 C_SOURCES +=Core/Src/gif.c 
-C_SOURCES +=Core/Src/tjpgd.c 
+# C_SOURCES +=Core/Src/tjpgd.c 
 C_SOURCES +=Core/Src/piclib.c 
 C_SOURCES +=Core/Src/ws_AT45DBXX.c 
 C_SOURCES +=Core/Src/custom_malloc.c 
@@ -151,21 +152,18 @@ SIMULATOR_SOURCES +=$(SIMULATOR_SRC_PATH)/simulator.c
 
 # common source
 SHARED_SOURCES += \
-ui_test.c  \
+ui/ui_test.c  \
 ui/simpson.c \
-ui/leg.c \
 
 
 # LVGL includes
-LVGL_DIR = .
-LVGL_DIR_NAME = lvgl
-include $(LVGL_DIR)/$(LVGL_DIR_NAME)/lvgl.mk
+include ./lvgl/lvgl.mk
 LVGL_SOURCES := $(CSRCS)
 SHARED_SOURCES += $(LVGL_SOURCES)
 
-CSRCS :=
-include lv_drivers/lv_drivers.mk
-LV_DRIVER_SOURCES := $(CSRCS)
+# CSRCS :=
+# include lv_drivers/lv_drivers.mk
+# LV_DRIVER_SOURCES := $(CSRCS)
 
 C_SOURCES += $(SHARED_SOURCES)
 
@@ -193,7 +191,7 @@ SZ = $(PREFIX)size
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
- 
+
 #######################################
 # CFLAGS
 #######################################
@@ -217,12 +215,10 @@ AS_DEFS =
 C_DEFS =  \
 -DUSE_STDPERIPH_DRIVER \
 -DSTM32F40_41xxx \
--DUSE_USB_OTG_FS
-
-
-# AS includes
-AS_INCLUDES = 
-
+-DUSE_USB_OTG_FS \
+-DLV_CONF_SKIP \
+-DLV_USE_LOG \
+-DLV_USE_DEMO_STRESS=1 \
 
 
 # C includes
@@ -235,10 +231,9 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -I. \
 -Iui \
--Ilvgl \
 -Idevice \
--Ilv_demos \
--Ilv_drivers \
+-Ilvgl \
+-Ilvgl\demos \
 -IDrivers/STM32_USB_OTG_Driver/inc \
 -IDrivers/STM32_USB_Device_Library/Core/inc \
 -IDrivers/STM32_USB_Device_Library/Class/cdc/inc \
@@ -246,8 +241,6 @@ C_INCLUDES =  \
 
 
 # compile gcc flags
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
-
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -Wno-missing-braces -std=c11
 
 ifeq ($(DEBUG), 1)
@@ -268,20 +261,20 @@ LDSCRIPT = STM32F407VGTx_FLASH.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -Wl,--print-memory-usage -u _printf_float
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(DEVICE_BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -Wl,--print-memory-usage -u _printf_float
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(DEVICE_BUILD_DIR)/$(TARGET).elf $(DEVICE_BUILD_DIR)/$(TARGET).hex $(DEVICE_BUILD_DIR)/$(TARGET).bin
 
 
 #######################################
 # build the application
 #######################################
 # list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+OBJECTS = $(addprefix $(DEVICE_BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCES)))
 # list of ASM program objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
+OBJECTS += $(addprefix $(DEVICE_BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 
@@ -291,15 +284,16 @@ vpath %.s $(sort $(dir $(ASM_SOURCES)))
 #######################################
 S_SRCS = $(SIMULATOR_SOURCES)
 S_SRCS += $(SHARED_SOURCES)
-S_SRCS += $(LV_DRIVER_SOURCES)
 
 S_OBJECTS = $(patsubst %,$(SIMULATOR_BUILD_DIR)/%,$(S_SRCS:.c=.o))
 
 S_CC = gcc
 S_CFLAGS = 
-S_DEFINES = -D SIMULATOR=1 -D LV_LVGL_H_INCLUDE_SIMPLE=0 -D LV_BUILD_TEST=0 -D STM32F40_41xxx -D USE_STDPERIPH_DRIVER
+S_INCLUDES= -I./ -I./ui
+# S_DEFINES = -D SIMULATOR=1 -D LV_LVGL_H_INCLUDE_SIMPLE=0 -D LV_BUILD_TEST=0 -D LV_CONF_BUILD_DISABLE_EXAMPLES=1 -D STM32F40_41xxx -D USE_STDPERIPH_DRIVER
+S_DEFINES =  -D SIMULATOR
 
-S_COMPILE = $(S_CC) $(S_CFLAGS) $(C_INCLUDES) $(S_INCLUDES) $(S_DEFINES)
+S_COMPILE = $(S_CC) $(S_CFLAGS) $(S_INCLUDES) $(S_DEFINES)
 S_BIN = $(SIMULATOR_BUILD_DIR)/$(TARGET)
 S_LDLIBS = -lSDL2 -lm
 
@@ -307,24 +301,24 @@ S_LDLIBS = -lSDL2 -lm
 
 
 
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+$(DEVICE_BUILD_DIR)/%.o: %.c Makefile | $(DEVICE_BUILD_DIR) 
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(DEVICE_BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
+$(DEVICE_BUILD_DIR)/%.o: %.s Makefile | $(DEVICE_BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(DEVICE_BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(DEVICE_BUILD_DIR)/%.hex: $(DEVICE_BUILD_DIR)/%.elf | $(DEVICE_BUILD_DIR)
 	$(HEX) $< $@
 	
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(DEVICE_BUILD_DIR)/%.bin: $(DEVICE_BUILD_DIR)/%.elf | $(DEVICE_BUILD_DIR)
 	$(BIN) $< $@	
 	
-$(BUILD_DIR):
-	mkdir $@		
+$(DEVICE_BUILD_DIR):
+	mkdir -p $@		
 
 
 
@@ -344,11 +338,6 @@ $(S_BIN): $(S_OBJECTS)
 	$(S_CC) -o $(S_BIN) $(S_OBJECTS) $(S_LDFLAGS) ${S_LDLIBS}
 
 
-
-
-
-
-
 #######################################
 # clean up
 #######################################
@@ -361,7 +350,7 @@ clean:
 # flash
 #######################################
 flash: all
-	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "transport select hla_swd" -c "program ${BUILD_DIR}/${TARGET}.elf verify reset exit"
+	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "transport select hla_swd" -c "program ${DEVICE_BUILD_DIR}/${TARGET}.elf verify reset exit"
   
 #######################################
 # dependencies
