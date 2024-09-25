@@ -1,6 +1,9 @@
 #include "ui_test.h"
-#include "../lvgl/lvgl.h"
 #include "../lvgl/demos/lv_demos.h"
+#include "../lvgl/lvgl.h"
+
+#define MAX_VALUE 100
+#define MIN_VALUE 0
 
 static lv_obj_t *screen;
 static lv_obj_t *chart;
@@ -57,14 +60,14 @@ static void event_handler_3(lv_event_t *e)
 static void draw_event_cb(lv_event_t *e)
 {
     lv_draw_task_t *draw_task = lv_event_get_draw_task(e);
-    lv_draw_dsc_base_t *base_dsc = draw_task->draw_dsc;
+    lv_draw_dsc_base_t *base_dsc = lv_draw_task_get_draw_dsc(draw_task);
 
-    if (base_dsc->part == LV_PART_ITEMS && draw_task->type == LV_DRAW_TASK_TYPE_LINE)
+    if (base_dsc->part == LV_PART_ITEMS && lv_draw_task_get_type(draw_task) == LV_DRAW_TASK_TYPE_LINE)
     {
         add_faded_area(e);
     }
     /*Hook the division lines too*/
-    if (base_dsc->part == LV_PART_MAIN && draw_task->type == LV_DRAW_TASK_TYPE_LINE)
+    if (base_dsc->part == LV_PART_MAIN && lv_draw_task_get_type(draw_task) == LV_DRAW_TASK_TYPE_LINE)
     {
         hook_division_lines(e);
     }
@@ -73,14 +76,17 @@ static void draw_event_cb(lv_event_t *e)
 static void add_faded_area(lv_event_t *e)
 {
     lv_obj_t *obj = lv_event_get_target(e);
+    lv_area_t coords;
+    lv_obj_get_coords(obj, &coords);
 
     lv_draw_task_t *draw_task = lv_event_get_draw_task(e);
-    lv_draw_dsc_base_t *base_dsc = draw_task->draw_dsc;
+    lv_draw_dsc_base_t *base_dsc = lv_draw_task_get_draw_dsc(draw_task);
 
     const lv_chart_series_t *ser = lv_chart_get_series_next(obj, NULL);
+    lv_color_t ser_color = lv_chart_get_series_color(obj, ser);
 
     /*Draw a triangle below the line witch some opacity gradient*/
-    lv_draw_line_dsc_t *draw_line_dsc = draw_task->draw_dsc;
+    lv_draw_line_dsc_t *draw_line_dsc = lv_draw_task_get_draw_dsc(draw_task);
     lv_draw_triangle_dsc_t tri_dsc;
 
     lv_draw_triangle_dsc_init(&tri_dsc);
@@ -93,12 +99,12 @@ static void add_faded_area(lv_event_t *e)
     tri_dsc.bg_grad.dir = LV_GRAD_DIR_VER;
 
     int32_t full_h = lv_obj_get_height(obj);
-    int32_t fract_uppter = (int32_t)(LV_MIN(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - obj->coords.y1) * 255 / full_h;
-    int32_t fract_lower = (int32_t)(LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - obj->coords.y1) * 255 / full_h;
-    tri_dsc.bg_grad.stops[0].color = ser->color;
+    int32_t fract_uppter = (int32_t)(LV_MIN(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - coords.y1) * 255 / full_h;
+    int32_t fract_lower = (int32_t)(LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - coords.y1) * 255 / full_h;
+    tri_dsc.bg_grad.stops[0].color = ser_color;
     tri_dsc.bg_grad.stops[0].opa = 255 - fract_uppter;
     tri_dsc.bg_grad.stops[0].frac = 0;
-    tri_dsc.bg_grad.stops[1].color = ser->color;
+    tri_dsc.bg_grad.stops[1].color = ser_color;
     tri_dsc.bg_grad.stops[1].opa = 255 - fract_lower;
     tri_dsc.bg_grad.stops[1].frac = 255;
 
@@ -108,10 +114,10 @@ static void add_faded_area(lv_event_t *e)
     lv_draw_rect_dsc_t rect_dsc;
     lv_draw_rect_dsc_init(&rect_dsc);
     rect_dsc.bg_grad.dir = LV_GRAD_DIR_VER;
-    rect_dsc.bg_grad.stops[0].color = ser->color;
+    rect_dsc.bg_grad.stops[0].color = ser_color;
     rect_dsc.bg_grad.stops[0].frac = 0;
     rect_dsc.bg_grad.stops[0].opa = 255 - fract_lower;
-    rect_dsc.bg_grad.stops[1].color = ser->color;
+    rect_dsc.bg_grad.stops[1].color = ser_color;
     rect_dsc.bg_grad.stops[1].frac = 255;
     rect_dsc.bg_grad.stops[1].opa = 0;
 
@@ -119,15 +125,15 @@ static void add_faded_area(lv_event_t *e)
     rect_area.x1 = (int32_t)draw_line_dsc->p1.x;
     rect_area.x2 = (int32_t)draw_line_dsc->p2.x - 1;
     rect_area.y1 = (int32_t)LV_MAX(draw_line_dsc->p1.y, draw_line_dsc->p2.y) - 1;
-    rect_area.y2 = (int32_t)obj->coords.y2;
+    rect_area.y2 = (int32_t)coords.y2;
     lv_draw_rect(base_dsc->layer, &rect_dsc, &rect_area);
 }
 
 static void hook_division_lines(lv_event_t *e)
 {
     lv_draw_task_t *draw_task = lv_event_get_draw_task(e);
-    lv_draw_dsc_base_t *base_dsc = draw_task->draw_dsc;
-    lv_draw_line_dsc_t *line_dsc = draw_task->draw_dsc;
+    lv_draw_dsc_base_t *base_dsc = lv_draw_task_get_draw_dsc(draw_task);
+    lv_draw_line_dsc_t *line_dsc = lv_draw_task_get_draw_dsc(draw_task);
 
     /*Vertical line*/
     if (line_dsc->p1.x == line_dsc->p2.x)
@@ -310,8 +316,11 @@ static void slider_event_cb(lv_event_t *e)
         if (!lv_obj_has_state(obj, LV_STATE_PRESSED))
             return;
 
-        lv_slider_t *slider = (lv_slider_t *)obj;
-        const lv_area_t *indic_area = &slider->bar.indic_area;
+        lv_area_t slider_area;
+        lv_obj_get_coords(obj, &slider_area);
+        lv_area_t indic_area = slider_area;
+        lv_area_set_width(&indic_area, lv_area_get_width(&slider_area) * lv_slider_get_value(obj) / MAX_VALUE);
+        indic_area.x1 += lv_area_get_width(&slider_area) * lv_slider_get_left_value(obj) / MAX_VALUE;
         char buf[16];
         lv_snprintf(buf, sizeof(buf), "%d - %d", (int)lv_slider_get_left_value(obj), (int)lv_slider_get_value(obj));
 
@@ -323,7 +332,7 @@ static void slider_event_cb(lv_event_t *e)
         label_area.y1 = 0;
         label_area.y2 = label_size.y - 1;
 
-        lv_area_align(indic_area, &label_area, LV_ALIGN_OUT_TOP_MID, 0, -10);
+        lv_area_align(&indic_area, &label_area, LV_ALIGN_OUT_TOP_MID, 0, -10);
 
         lv_draw_label_dsc_t label_draw_dsc;
         lv_draw_label_dsc_init(&label_draw_dsc);
